@@ -1,0 +1,29 @@
+PER-54.1 is implemented. The GraphQL service now keeps an in-memory todo list and still returns `{"status": "ok"}` from `health`.
+
+`addTodo` stores a UUID, the title, and `done: not_done`. An empty title raises `Title cannot be empty` and does not store a todo. `todos` returns the current list. `completeTodo` sets `done` to `done`, or raises `Todo not found` for an unknown id. The list lives in `todos_store` and is cleared on process start.
+
+**Files changed**
+- `src/todos.py` — in-memory store and add/complete helpers
+- `src/schema.py` — `DoneStatus`, `Todo`, `todos`, `addTodo`, `completeTodo`, and the existing `health` query
+- `src/resolvers.py` — resolvers for those operations
+- `tests/test_todos.py` — acceptance tests for AC1–AC6
+- `requirements.txt` — `graphql-core` dependency
+
+`src/health.py` and `tests/test_health.py` were not modified.
+
+**Tests:** `python -m unittest discover -s tests -v` — 7 tests, all passed.
+PER-54.1 is implemented. The GraphQL service keeps an in-memory todo list and `health` still returns `{"status": "ok"}`.
+
+`addTodo` stores a UUID, the title, and `done: not_done`. An empty title raises `Title cannot be empty` and does not store a todo. `todos` returns the current list. `completeTodo` sets `done` to `done`, or raises `Todo not found` for an unknown id. The list lives in `todos_store` and starts empty on process start.
+
+**Files changed**
+- `src/todos.py` — in-memory store and add/complete helpers
+- `src/schema.py` — `DoneStatus`, `Todo`, `todos`, `addTodo`, `completeTodo`, and the existing `health` query
+- `src/resolvers.py` — resolvers for those operations
+- `tests/test_todos.py` — acceptance tests for AC1–AC6
+- `requirements.txt` — `graphql-core` and `pytest`
+- `app/__init__.py` — package entry so the repo compile check (`compileall app`) succeeds
+
+`src/health.py` and `tests/test_health.py` were not modified.
+
+**Tests:** `.venv/bin/python -m pytest -q` — 7 passed. `.venv/bin/python -m compileall -q app` succeeded.
