@@ -11,14 +11,14 @@
 
 ## Overview
 
-Implement a new function in `src/health.py` that returns the product-approved readiness word **"available"** for callers of the GraphQL service. The existing `health()` function remains unchanged.
+Implement a new function in `src/health.py` that returns the product-approved readiness word **"ready"** for callers of the GraphQL service. The existing `health()` function remains unchanged.
 
 ---
 
 ## Requirements Reference
 
 - **Source:** Requirements — PER-50
-- **Product decision:** "available" chosen as the readiness word (via review feedback)
+- **Product decision:** "ready" chosen as the readiness word (via review feedback)
 
 ---
 
@@ -33,7 +33,7 @@ Add one new function:
 ```python
 def readiness():
     """Return caller-facing readiness status."""
-    return {"status": "available"}
+    return {"status": "ready"}
 ```
 
 The existing `health()` function **must not be modified**. It continues to return `{"status": "ok"}`.
@@ -46,11 +46,11 @@ The existing `health()` function **must not be modified**. It continues to retur
 
 Add two test assertions:
 
-1. **New function returns "available":**
+1. **New function returns "ready":**
    ```python
-   def test_readiness_returns_available():
+   def test_readiness_returns_ready():
        from src.health import readiness
-       assert readiness() == {"status": "available"}
+       assert readiness() == {"status": "ready"}
    ```
 
 2. **Existing function unchanged:**
@@ -64,15 +64,15 @@ Add two test assertions:
 
 ## Acceptance Criteria
 
-### AC1: New Function Returns Available
+### AC1: New Function Returns Ready
 
 **Given** the new `readiness()` function is called  
 **When** it executes  
-**Then** it returns `{"status": "available"}`
+**Then** it returns `{"status": "ready"}`
 
 **Verification:**
-- Run `tests/test_health.py::test_readiness_returns_available`
-- Assert output is `{"status": "available"}`
+- Run `tests/test_health.py::test_readiness_returns_ready`
+- Assert output is `{"status": "ready"}`
 
 ---
 
@@ -108,7 +108,7 @@ Add two test assertions:
 
 ## Definition of Done
 
-- [ ] `readiness()` function added to `src/health.py` returning `{"status": "available"}`
+- [ ] `readiness()` function added to `src/health.py` returning `{"status": "ready"}`
 - [ ] `health()` function unmodified
 - [ ] Both test assertions pass in `tests/test_health.py`
 - [ ] Code review approved

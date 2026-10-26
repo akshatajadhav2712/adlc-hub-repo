@@ -1,29 +1,28 @@
-# Plan — PER-50 (v2)
+# Plan — PER-50 (v3)
 
-- made from: review feedback (tpm_review)
+- made from: review feedback (architect_review)
 - source: LLM planner
 - complexity: trivial
 - needs plan review: no
 - track hint: standard
 
-Product has chosen 'available' as the readiness word; implementation proceeds with analyst inline_story only.
+Trivial single-function addition in one repo; product chose 'ready' not 'available', so analyst reruns inline_story to update the word in requirements and story.
 
 ## What changed
 
-Product chose 'available' via inline comment; analyst reruns to produce an inline story with the decided word.
+Product chose 'ready' not 'available'; analyst reruns to update the word throughout requirements and story.
 
-- Removed: tpm_gate, scrum_master
 - Rerun: analyst
 
 ## Feedback that informed this version
 
-- **PR inline comment** by akshatajadhav2712 on hub#5 `features/PER-50/requirements.md:75` `[hub#5:inline-4376679847]`: you can choose available
-  - addressed by: analyst activity changed to inline_story with 'available' as the chosen word
+- **PR inline comment** by akshatajadhav2712 on hub#6 `features/PER-50/requirements.md:56` `[hub#6:inline-4376839845]`: Keep status as ready not as available
+  - addressed by: analyst reruns inline_story to replace 'available' with 'ready' in all spec documents
 
 ## Steps
 
-1. [x] **analyst (inline_story)** — Convert the now-decided requirements into one implementable story with 'available' as the chosen word.
-   - focus: Use 'available' as the product-approved readiness word throughout the story and acceptance criteria.
+1. [x] **analyst (inline_story)** — Update requirements and story to use 'ready' instead of 'available' per product feedback.
+   - focus: Change all references to 'available' to 'ready' in requirements.md and stories/01-graphql.md. The function returns {"status": "ready"}, not {"status": "available"}.
 2. [ ] **architect_gate (review)** _(auto)_ _(rerun)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.
 4. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.
