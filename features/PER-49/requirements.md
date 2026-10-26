@@ -2,18 +2,18 @@
 
 ## Context
 
-The graphql service needs a new health check function in `src/health.py`. Product must choose between two status word options: "ready" or "available". No implementation work begins until product sign-off on the word choice.
+The graphql service needs a new health check function in `src/health.py` to check service health status. Product must choose between two status word options: "ready" or "available". No implementation work begins until product sign-off on the word choice.
 
 ## Scope
 
-- **In scope**: One new function in `src/health.py` returning a status dictionary
+- **In scope**: One new function in `src/health.py` returning a status dictionary to check service health status
 - **Out of scope**: Changes to existing `health()` function, new APIs, UI changes, additional repositories
 
 ## Acceptance Criteria
 
 ### AC1: Product chooses status word
 
-**Given** the graphql service needs a new health check function  
+**Given** the graphql service needs a new health check function to check service health status  
 **When** product reviews the two options ("ready" and "available")  
 **Then** product selects one word and documents the choice in this requirements artifact
 
@@ -24,7 +24,7 @@ The graphql service needs a new health check function in `src/health.py`. Produc
 ### AC2: New function returns chosen status
 
 **Given** product has chosen the status word `<CHOSEN_WORD>`  
-**When** the new health check function is called  
+**When** the new health check function is called to check service health status  
 **Then** it returns `{"status": "<CHOSEN_WORD>"}`
 
 **Verification**: Function execution returns dictionary with "status" key containing the product-approved word
@@ -56,6 +56,7 @@ The graphql service needs a new health check function in `src/health.py`. Produc
 ## Notes
 
 - Single function addition in `src/health.py`
+- Purpose: Check service health status
 - No changes to existing `health()` function
 - No new API endpoints or routes required
 - Implementation is one story after product choice
