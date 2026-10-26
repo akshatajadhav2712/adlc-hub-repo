@@ -1,0 +1,58 @@
+---
+schema_version: 1
+key: PER-54
+status: waiting_architect_review
+current_node: architect_gate
+track: quick
+involved_repos:
+- graphql
+depends_on: []
+owner: aksj
+lease_until: '2026-10-28T13:14:27.380109+00:00'
+revision: 6
+hub_sha: null
+ticket_hash: 2014875bfc6e0d3f
+jira_hash: 2014875bfc6e0d3f
+tpm_approved: false
+specs_locked: false
+skills_lock:
+  bmad: 1cbcfa272fe65787c06a1fa164a901f46117cca7
+stories:
+- 01-graphql
+child_ticket_keys: []
+critic_iterations: 0
+dev_retries: 0
+pr_revision_rounds: 0
+gate_rounds: {}
+pr_ids:
+  hub_arch: '10'
+  hub: '10'
+waiting_for: architect_review
+tokens_in: 21191
+tokens_out: 2739
+cost_anthropic_usd: 0.104322
+history:
+- node: intake
+  note: snapshot written
+  at: '2026-10-26T13:14:26.281897+00:00'
+- node: triage
+  note: llm classifier
+  at: '2026-10-26T13:14:27.377526+00:00'
+- node: planner
+  note: v1 source=llm complexity=simple steps=['analyst'] skipped=['tpm_gate', 'architect',
+    'scrum_master', 'designer', 'test_architect', 'critic']
+  at: '2026-10-26T13:14:35.935983+00:00'
+- node: analyst
+  note: wrote requirements.md
+  at: '2026-10-26T13:14:52.090012+00:00'
+- node: analyst
+  note: quick inline story
+  at: '2026-10-26T13:15:16.577853+00:00'
+- node: architect_gate
+  note: awaiting human hub PR approval
+  at: '2026-10-26T13:15:25.296648+00:00'
+---
+
+# Feature state
+
+See frontmatter for machine-readable fields.

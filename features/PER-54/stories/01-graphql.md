@@ -11,7 +11,7 @@
 
 ## Overview
 
-Add three GraphQL operations (queries and mutations) to the graphql service for managing an in-memory todo list. Each todo has an id, title, and done status (enum with values `done` or `not_done`). The list starts empty on process start and is not persisted. The existing `health()` query remains unchanged.
+Add three GraphQL operations (queries and mutations) to the graphql service for managing an in-memory todo list. Each todo has an id, title, and done flag. The list starts empty on process start and is not persisted. The existing `health()` query remains unchanged.
 
 ---
 
@@ -21,7 +21,7 @@ Add three GraphQL operations (queries and mutations) to the graphql service for 
 
 **Given** the service is running and the todo list is empty  
 **When** a client calls `addTodo(title: "Buy milk")`  
-**Then** the mutation returns a todo with `title = "Buy milk"`, `done = "not_done"`, and a non-empty `id`
+**Then** the mutation returns a todo with `title = "Buy milk"`, `done = false`, and a non-empty `id`
 
 ---
 
@@ -29,15 +29,15 @@ Add three GraphQL operations (queries and mutations) to the graphql service for 
 
 **Given** a todo with title "Buy milk" has been added  
 **When** a client calls the `todos` query  
-**Then** the response includes that todo with its `id`, `title = "Buy milk"`, and `done = "not_done"`
+**Then** the response includes that todo with its `id`, `title = "Buy milk"`, and `done = false`
 
 ---
 
 ### AC3: completeTodo marks a todo as done
 
-**Given** a todo with title "Buy milk" exists with `done = "not_done"`  
+**Given** a todo with title "Buy milk" exists with `done = false`  
 **When** a client calls `completeTodo(id: "<that todo's id>")`  
-**Then** the mutation returns the same todo with `done = "done"`
+**Then** the mutation returns the same todo with `done = true`
 
 ---
 
@@ -71,17 +71,17 @@ Add three GraphQL operations (queries and mutations) to the graphql service for 
 
 Each todo object has three fields:
 
-- **id**: string, unique identifier assigned at creation (use UUID)
+- **id**: string, unique identifier assigned at creation (use UUID or incrementing counter)
 - **title**: string, the todo description
-- **done**: enum with two possible values: `"done"` or `"not_done"`, defaults to `"not_done"` at creation
+- **done**: boolean, defaults to `false` at creation
 
 ### In-Memory Storage
 
-Maintain a module-level list in a new file `src/todos.py`:
+Maintain a module-level list or dictionary in a new file `src/todos.py`:
 
 ```python
 # src/todos.py
-todos_store = []
+todos_store = []  # or {} if using dict for id lookup
 ```
 
 ### GraphQL Schema
@@ -89,15 +89,10 @@ todos_store = []
 Extend the existing schema (or create `src/schema.py` if none exists) with:
 
 ```graphql
-enum DoneStatus {
-  done
-  not_done
-}
-
 type Todo {
   id: String!
   title: String!
-  done: DoneStatus!
+  done: Boolean!
 }
 
 type Query {
@@ -124,15 +119,15 @@ Create `src/resolvers.py` or add to existing resolver module:
 #### Mutation: `addTodo(title: String!)`
 
 - **Validation:** Reject if `title` is empty string; raise GraphQL error with message "Title cannot be empty"
-- Generate unique `id` using `uuid.uuid4()`
-- Create todo object: `{"id": <id>, "title": <title>, "done": "not_done"}`
+- Generate unique `id` (UUID recommended)
+- Create todo object: `{"id": <id>, "title": <title>, "done": False}`
 - Append to `todos_store`
 - Return the created todo
 
 #### Mutation: `completeTodo(id: String!)`
 
 - **Validation:** Search `todos_store` for matching `id`; if not found, raise GraphQL error with message "Todo not found"
-- Set `done = "done"` on the matched todo
+- Set `done = True` on the matched todo
 - Return the updated todo
 
 ### File Changes
@@ -140,7 +135,7 @@ Create `src/resolvers.py` or add to existing resolver module:
 | File | Change |
 |------|--------|
 | `src/todos.py` | Create new file with in-memory storage and todo management functions |
-| `src/schema.py` | Create or extend with DoneStatus enum, Todo type, todos query, addTodo and completeTodo mutations |
+| `src/schema.py` | Create or extend with Todo type, todos query, addTodo and completeTodo mutations |
 | `src/resolvers.py` | Create or extend with resolver functions for todos, addTodo, completeTodo |
 | `src/health.py` | No changes (verify health resolver still works) |
 | `tests/test_todos.py` | Create new test file covering all six acceptance criteria |
@@ -178,8 +173,7 @@ All six acceptance criteria pass as automated tests. The GraphQL service respond
 
 ## Notes
 
-- **ID generation:** Use Python's `uuid.uuid4()` for unique todo IDs
+- **ID generation:** Use Python's `uuid.uuid4()` for unique todo IDs, or a simple counter if UUIDs are overkill
 - **Error handling:** GraphQL errors should use appropriate error types (e.g., `ValueError` or custom GraphQL exception)
 - **Test isolation:** Each test should start with an empty `todos_store` or reset it in setup
 - **Validation order:** Check title emptiness before creating the todo object
-- **Enum values:** The `done` field must only accept `"done"` or `"not_done"` as values; enforce this in the GraphQL schema definition
