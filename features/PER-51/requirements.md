@@ -15,19 +15,19 @@
 **When** product reviews the options  
 **Then** product selects exactly one word for caller-facing readiness status
 
-### REQ-2: New function returns chosen word
+### REQ-2: New function returns chosen word in success-key format
 **Given** product has chosen the readiness word  
 **When** the new function in `src/health.py` is called  
-**Then** it returns `{"status": "<chosen_word>"}`
+**Then** it returns `{"<chosen_word>": "success"}`
 
 **Example (if "ready" chosen):**
 ```python
-{"status": "ready"}
+{"ready": "success"}
 ```
 
 **Example (if "available" chosen):**
 ```python
-{"status": "available"}
+{"available": "success"}
 ```
 
 ### REQ-3: Existing health() unchanged
@@ -60,6 +60,6 @@
 ## Success signal
 
 - Product has documented their choice of "ready" or "available"
-- The new function in `src/health.py` exists and returns the chosen word in the specified format
+- The new function in `src/health.py` exists and returns the chosen word in the success-key format `{"<word>": "success"}`
 - `health()` continues to return `{"status": "ok"}` unchanged
 - Tests pass for both functions
