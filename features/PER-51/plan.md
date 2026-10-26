@@ -1,31 +1,32 @@
-# Plan — PER-51 (v3)
+# Plan — PER-51 (v4)
 
-- made from: review feedback (tpm_review)
+- made from: review feedback (architect_review)
 - source: LLM planner
-- complexity: simple
+- complexity: trivial
 - needs plan review: no
 - track hint: standard
 
-Product wording decision followed by one-function implementation in health.py; reviewer clarified the return format so requirements are updated and the plan proceeds.
+Product chose 'available' as the readiness word; scrum_master reruns to update stories with the final implementation details.
 
 ## What changed
 
-Corrected the return format in requirements.md from {"status": "<word>"} to {"<word>": "success"} per inline comment hub#7:inline-4377050704.
+Product chose 'available' via inline comment; scrum_master reruns to update stories with the final word.
 
-- Removed: architect, designer, test_architect, critic
+- Rerun: scrum_master
+- Kept (results reused): analyst, tpm_gate
 
 ## Feedback that informed this version
 
-- **PR inline comment** by akshatajadhav2712 on hub#7 `features/PER-51/requirements.md:36` `[hub#7:inline-4377050704]`: instead of returning on return status : success
-  - addressed by: analyst reruns to fix REQ-2 return format from {"status": "ready"} to {"ready": "success"}
+- **PR inline comment** by akshatajadhav2712 on hub#9 `features/PER-51/breakdown.md:36` `[hub#9:inline-4377200505]`: choose available always
+  - addressed by: scrum_master reruns to replace placeholder with 'available' in REQ-2 and Story 2
 
 ## Steps
 
-1. [x] **analyst (requirements)** — Correct the return format from dict to success-key dict per reviewer feedback.
-   - focus: Change REQ-2 example from {"status": "<word>"} to {"<word>": "success"} as the reviewer specified.
-2. [ ] **tpm_gate (review)** _(rerun)_ — Product must choose between 'ready' and 'available' before implementation.
-3. [ ] **ticketize (normalize)** _(auto)_ _(rerun)_ — Normalize proposed tickets after TPM approval.
-4. [ ] **scrum_master (breakdown)** _(rerun)_ — Two proposed tickets (decision + implementation) need breakdown into stories.
+1. [x] **analyst (requirements)** — Turn the ticket into Given/When/Then requirements.
+2. [x] **tpm_gate (review)** — Product must choose between 'ready' and 'available' before implementation.
+3. [x] **ticketize (normalize)** _(auto)_ — Normalize proposed tickets after TPM approval.
+4. [x] **scrum_master (breakdown)** — Two proposed tickets (decision + implementation) need breakdown into stories.
+   - focus: Update REQ-2 and Story 2 to use 'available' as the chosen word. The new function returns {"available": "success"}.
 5. [ ] **architect_gate (review)** _(auto)_ _(rerun)_ — Human approval of specs and this plan before Dev.
 6. [ ] **dev** _(auto)_ — Fixed execution step.
 7. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.
