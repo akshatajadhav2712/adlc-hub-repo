@@ -10,7 +10,7 @@
 
 ## Overview
 
-Add three GraphQL operations (queries and mutations) to the graphql service for managing an in-memory todo list. Each todo has an id, title, and done flag. The list starts empty on process start and is not persisted.
+Add three GraphQL operations (queries and mutations) to the graphql service for managing an in-memory todo list. Each todo has an id, title, and done status (enum). The list starts empty on process start and is not persisted.
 
 ---
 
@@ -20,7 +20,7 @@ Add three GraphQL operations (queries and mutations) to the graphql service for 
 
 **Given** the service is running and the todo list is empty  
 **When** a client calls `addTodo(title: "Buy milk")`  
-**Then** the mutation returns a todo with `title = "Buy milk"`, `done = false`, and a non-empty `id`
+**Then** the mutation returns a todo with `title = "Buy milk"`, `done = "not_done"`, and a non-empty `id`
 
 ---
 
@@ -28,15 +28,15 @@ Add three GraphQL operations (queries and mutations) to the graphql service for 
 
 **Given** a todo with title "Buy milk" has been added  
 **When** a client calls the `todos` query  
-**Then** the response includes that todo with its `id`, `title = "Buy milk"`, and `done = false`
+**Then** the response includes that todo with its `id`, `title = "Buy milk"`, and `done = "not_done"`
 
 ---
 
 ### AC3: completeTodo marks a todo as done
 
-**Given** a todo with title "Buy milk" exists with `done = false`  
+**Given** a todo with title "Buy milk" exists with `done = "not_done"`  
 **When** a client calls `completeTodo(id: "<that todo's id>")`  
-**Then** the mutation returns the same todo with `done = true`
+**Then** the mutation returns the same todo with `done = "done"`
 
 ---
 
@@ -70,7 +70,7 @@ Each todo object has:
 
 - **id**: string, unique identifier assigned at creation
 - **title**: string, the todo description
-- **done**: boolean, defaults to `false` at creation
+- **done**: enum with values `"done"` or `"not_done"`, defaults to `"not_done"` at creation
 
 ---
 
@@ -86,7 +86,7 @@ Returns the full list of todos currently in memory.
 
 ### Mutation: addTodo(title: String!)
 
-Creates a new todo with the given title and `done = false`.
+Creates a new todo with the given title and `done = "not_done"`.
 
 **Arguments:**
 - `title` (required string)
@@ -99,7 +99,7 @@ Creates a new todo with the given title and `done = false`.
 
 ### Mutation: completeTodo(id: String!)
 
-Sets the `done` field to `true` for the todo with the given id.
+Sets the `done` field to `"done"` for the todo with the given id.
 
 **Arguments:**
 - `id` (required string)
