@@ -23,9 +23,9 @@ Corrected the return format in requirements.md from {"status": "<word>"} to {"<w
 
 1. [x] **analyst (requirements)** — Correct the return format from dict to success-key dict per reviewer feedback.
    - focus: Change REQ-2 example from {"status": "<word>"} to {"<word>": "success"} as the reviewer specified.
-2. [ ] **tpm_gate (review)** _(rerun)_ — Product must choose between 'ready' and 'available' before implementation.
-3. [ ] **ticketize (normalize)** _(auto)_ _(rerun)_ — Normalize proposed tickets after TPM approval.
-4. [ ] **scrum_master (breakdown)** _(rerun)_ — Two proposed tickets (decision + implementation) need breakdown into stories.
+2. [x] **tpm_gate (review)** — Product must choose between 'ready' and 'available' before implementation.
+3. [x] **ticketize (normalize)** _(auto)_ — Normalize proposed tickets after TPM approval.
+4. [x] **scrum_master (breakdown)** — Two proposed tickets (decision + implementation) need breakdown into stories.
 5. [ ] **architect_gate (review)** _(auto)_ _(rerun)_ — Human approval of specs and this plan before Dev.
 6. [ ] **dev** _(auto)_ — Fixed execution step.
 7. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.
