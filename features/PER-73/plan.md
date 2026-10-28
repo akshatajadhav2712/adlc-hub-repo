@@ -10,7 +10,7 @@ This feature adds two-part in-memory reminder functionality to the GraphQL servi
 
 ## Steps
 
-1. [ ] **analyst (requirements)** — The ticket contains product decisions awaiting review and multiple acceptance criteria that need formal Given/When/Then requirements.
+1. [x] **analyst (requirements)** — The ticket contains product decisions awaiting review and multiple acceptance criteria that need formal Given/When/Then requirements.
    - focus: Focus on the product decisions (uniqueness, cascading deletes, validation limits); map each AC to requirements; ensure Part 1/Part 2 ordering is clear.
 2. [ ] **tpm_gate (review)** — Five product decisions are explicitly flagged for review before technical work begins.
 3. [ ] **ticketize (normalize)** _(auto)_ — Normalize proposed tickets after TPM approval.
