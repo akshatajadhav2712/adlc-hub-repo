@@ -3,14 +3,14 @@
   "key": "PER-76",
   "source": "llm",
   "complexity": "simple",
-  "summary": "Single-repo in-memory feature with clear acceptance criteria and no cross-cutting concerns; analyst inline_story is sufficient.",
+  "summary": "One repo, behavioral spec is complete in the ticket, no breakdown needed; analyst reruns to fix the done field type from boolean to enum per inline feedback.",
   "track_hint": "quick",
   "steps": [
     {
       "node": "analyst",
       "activity": "inline_story",
-      "why": "One repo, behavioral spec is complete in the ticket, no breakdown needed.",
-      "instructions": "Focus on the six acceptance criteria as Given/When/Then; tech notes should cover GraphQL schema, resolver implementation, and in-memory storage.",
+      "why": "Regenerate requirements and story with done field as enum (done/not done) instead of boolean.",
+      "instructions": "Change the done field from boolean to an enum with values 'done' and 'not done', default 'not done'. Update the data model, operations, and all acceptance criteria accordingly.",
       "auto": false,
       "status": "done",
       "rerun": false
@@ -22,7 +22,7 @@
       "instructions": "",
       "auto": true,
       "status": "pending",
-      "rerun": false
+      "rerun": true
     },
     {
       "node": "dev",
@@ -98,16 +98,40 @@
   ],
   "suggested_roles": [],
   "notes": [],
-  "created_at": "2026-10-28T12:05:59.721825+00:00",
-  "version": 1,
-  "trigger": "ticket",
-  "gate": null,
-  "feedback": [],
+  "created_at": "2026-10-28T12:23:04.034099+00:00",
+  "version": 2,
+  "trigger": "review",
+  "gate": "architect_review",
+  "feedback": [
+    {
+      "id": "hub#21:inline-4400469502",
+      "source": "pr_inline",
+      "body": "Done data type should be enum with values [done , not done ] default  is done",
+      "author": "akshatajadhav2712",
+      "path": "features/PER-76/stories/01-graphql.md",
+      "line": 71,
+      "pr": "hub#21"
+    }
+  ],
   "feedback_errors": [],
-  "seen_feedback_ids": [],
-  "change_summary": "",
-  "changes": null,
-  "addressed": [],
+  "seen_feedback_ids": [
+    "hub#21:inline-4400469502"
+  ],
+  "change_summary": "Changed done field from boolean to enum per inline review feedback; analyst reruns to update requirements and story.",
+  "changes": {
+    "added": [],
+    "removed": [],
+    "rerun": [
+      "analyst"
+    ],
+    "kept": []
+  },
+  "addressed": [
+    {
+      "feedback_id": "hub#21:inline-4400469502",
+      "change": "analyst reruns with instructions to change done field to enum with values done/not done"
+    }
+  ],
   "unresolved_questions": [],
   "requires_review": true
 }
