@@ -3,3 +3,9 @@
 {"at": "2026-10-28T13:09:15.521168+00:00", "node": "planner", "event": "llm_ok", "model": "claude-sonnet-4-5-20250929", "in": 2459, "out": 370, "cache_read": 0, "usd": 0.012927, "ms": 7888, "ok": true, "dry_run": false, "error": null}
 {"at": "2026-10-28T13:12:05.181680+00:00", "node": "analyst", "event": "llm_ok", "model": "claude-sonnet-4-5-20250929", "in": 8880, "out": 853, "cache_read": 0, "usd": 0.039435, "ms": 20126, "ok": true, "dry_run": false, "error": null}
 {"at": "2026-10-28T13:12:25.151595+00:00", "node": "analyst", "event": "llm_ok", "model": "claude-sonnet-4-5-20250929", "in": 9709, "out": 1418, "cache_read": 0, "usd": 0.050397, "ms": 19961, "ok": true, "dry_run": false, "error": null}
+{"at": "2026-10-28T13:23:32.349508+00:00", "node": "dev", "event": "cursor_run", "ok": false, "status": "error", "error": "agent exit 1"}
+{"at": "2026-10-28T13:23:32.564133+00:00", "node": "dev", "event": "verify_fail", "ok": false, "error": "agent exit 1"}
+{"at": "2026-10-28T13:27:47.676128+00:00", "node": "dev", "event": "cursor_run", "ok": false, "status": "error", "error": "agent exit 1"}
+{"at": "2026-10-28T13:27:47.924258+00:00", "node": "dev", "event": "verify_fail", "ok": false, "error": "agent exit 1"}
+{"at": "2026-10-28T13:32:03.316713+00:00", "node": "dev", "event": "cursor_run", "ok": false, "status": "error", "error": "agent exit 1"}
+{"at": "2026-10-28T13:32:03.511566+00:00", "node": "dev", "event": "verify_fail", "ok": false, "error": "agent exit 1"}
