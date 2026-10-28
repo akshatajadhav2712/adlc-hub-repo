@@ -10,7 +10,7 @@ Single-repo in-memory feature with clear acceptance criteria and no cross-cuttin
 
 ## Steps
 
-1. [ ] **analyst (inline_story)** — One repo, behavioral spec is complete in the ticket, no breakdown needed.
+1. [x] **analyst (inline_story)** — One repo, behavioral spec is complete in the ticket, no breakdown needed.
    - focus: Focus on the six acceptance criteria as Given/When/Then; tech notes should cover GraphQL schema, resolver implementation, and in-memory storage.
 2. [ ] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.
