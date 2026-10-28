@@ -31,9 +31,9 @@ repos:
     role: api
     base: main
     commands:
-      # Use worktree .venv (system python has no fastapi/pytest). Package lives in app/.
-      test: ".venv/bin/python -m pytest -q"
-      lint: ".venv/bin/python -m compileall -q app"
+      # Use worktree .venv (system python has no project deps). Package lives in src/.
+      test: ".venv/bin/python -m unittest discover -s tests"
+      lint: ".venv/bin/python -m compileall -q src"
   agent:
     path_key: agent
     url: https://github.com/goofranshaikh-eng/adlc-agents.git                  
