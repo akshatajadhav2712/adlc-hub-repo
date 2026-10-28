@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "key": "PER-78",
+  "source": "llm",
+  "complexity": "simple",
+  "summary": "Self-contained GraphQL feature in one repo with clear acceptance criteria; analyst inline_story produces the implementable story directly.",
+  "track_hint": "quick",
+  "steps": [
+    {
+      "node": "analyst",
+      "activity": "inline_story",
+      "why": "Ticket has complete behavioral requirements and acceptance criteria for a single-repo change.",
+      "instructions": "Focus on the six acceptance criteria exactly as stated; include tech notes on in-memory storage and GraphQL schema definition.",
+      "auto": false,
+      "status": "done",
+      "rerun": false
+    },
+    {
+      "node": "architect_gate",
+      "activity": "review",
+      "why": "Human approval of specs and this plan before Dev.",
+      "instructions": "",
+      "auto": true,
+      "status": "pending",
+      "rerun": false
+    },
+    {
+      "node": "dev",
+      "activity": null,
+      "why": "Fixed execution step.",
+      "instructions": "",
+      "auto": true,
+      "status": "pending",
+      "rerun": false
+    },
+    {
+      "node": "pre_pr_qa",
+      "activity": null,
+      "why": "Fixed execution step.",
+      "instructions": "",
+      "auto": true,
+      "status": "pending",
+      "rerun": false
+    },
+    {
+      "node": "open_pr",
+      "activity": null,
+      "why": "Fixed execution step.",
+      "instructions": "",
+      "auto": true,
+      "status": "pending",
+      "rerun": false
+    },
+    {
+      "node": "pr_review",
+      "activity": null,
+      "why": "Fixed execution step.",
+      "instructions": "",
+      "auto": true,
+      "status": "pending",
+      "rerun": false
+    },
+    {
+      "node": "merge",
+      "activity": null,
+      "why": "Fixed execution step.",
+      "instructions": "",
+      "auto": true,
+      "status": "pending",
+      "rerun": false
+    }
+  ],
+  "skipped": [
+    {
+      "node": "tpm_gate",
+      "why": "Scope is unambiguous and technical; no product sign-off needed."
+    },
+    {
+      "node": "architect",
+      "why": "No new components, API contracts, or cross-repo dependencies; simple in-memory list."
+    },
+    {
+      "node": "scrum_master",
+      "why": "Single story in one repo; no breakdown needed."
+    },
+    {
+      "node": "designer",
+      "why": "Implementation is straightforward; GraphQL schema and resolver logic are clear from requirements."
+    },
+    {
+      "node": "test_architect",
+      "why": "Six acceptance criteria map directly to test cases; no complex edge case analysis needed."
+    },
+    {
+      "node": "critic",
+      "why": "Only one spec artifact produced; nothing to cross-check."
+    }
+  ],
+  "suggested_roles": [],
+  "notes": [],
+  "created_at": "2026-10-28T13:09:15.522071+00:00",
+  "version": 1,
+  "trigger": "ticket",
+  "gate": null,
+  "feedback": [],
+  "feedback_errors": [],
+  "seen_feedback_ids": [],
+  "change_summary": "",
+  "changes": null,
+  "addressed": [],
+  "unresolved_questions": [],
+  "requires_review": true
+}

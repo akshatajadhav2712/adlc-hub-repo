@@ -10,7 +10,7 @@ Self-contained GraphQL feature in one repo with clear acceptance criteria; analy
 
 ## Steps
 
-1. [ ] **analyst (inline_story)** — Ticket has complete behavioral requirements and acceptance criteria for a single-repo change.
+1. [x] **analyst (inline_story)** — Ticket has complete behavioral requirements and acceptance criteria for a single-repo change.
    - focus: Focus on the six acceptance criteria exactly as stated; include tech notes on in-memory storage and GraphQL schema definition.
 2. [ ] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.
