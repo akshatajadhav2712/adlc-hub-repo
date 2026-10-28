@@ -27,7 +27,7 @@ cursor:
 repos:
   graphql:
     path_key: graphql
-    url: https://github.com/goofranshaikh-eng/adlc-graphql.git
+    url: https://github.com/akshatajadhav2712/adlc-graphql.git
     role: api
     base: main
     commands:
@@ -36,7 +36,7 @@ repos:
       lint: ".venv/bin/python -m compileall -q app"
   agent:
     path_key: agent
-    url: https://github.com/goofranshaikh-eng/adlc-agents.git
+    url: https://github.com/goofranshaikh-eng/adlc-agents.git                  
     role: agents
     base: main
     commands:
@@ -52,9 +52,11 @@ repos:
       lint: ".venv/bin/python -m compileall -q mcp"
 dependency_order: [graphql, mcp, agent]
 policies:
+  plan_review: true
   spec_review: hub_pr                # cli | hub_pr (hub_pr = human-only spec review)
   feature_pr_agent_review: true
   feature_pr_human_review: required  # required | optional | none
+  human_mode: true
   lease_hours: 48
 budgets:
   per_feature_anthropic_usd: 15
