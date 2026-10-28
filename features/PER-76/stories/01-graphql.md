@@ -12,6 +12,11 @@
 
 Extend the existing `graphql` service with a minimal in-memory todo list. The service already exposes `health()`; this story adds three GraphQL operations (`todos`, `addTodo`, `completeTodo`) and an in-memory store. No database, no UI, no authentication. The list resets when the process restarts.
 
+A todo has three fields:
+- `id`: string (unique, auto-generated)
+- `title`: string (user-provided)
+- `done`: enum with values `"done"` or `"not done"`, default `"not done"`
+
 ---
 
 ## Acceptance Criteria
@@ -20,7 +25,7 @@ Extend the existing `graphql` service with a minimal in-memory todo list. The se
 
 **Given** the todo list is empty  
 **When** I call `addTodo(title: "Buy milk")`  
-**Then** it returns a todo with `title = "Buy milk"`, `done = false`, and a unique `id`
+**Then** it returns a todo with `title = "Buy milk"`, `done = "not done"`, and a unique `id`
 
 ### AC2: Query all todos
 
@@ -30,9 +35,9 @@ Extend the existing `graphql` service with a minimal in-memory todo list. The se
 
 ### AC3: Complete an existing todo
 
-**Given** a todo with id `<known-id>` exists and `done = false`  
+**Given** a todo with id `<known-id>` exists and `done = "not done"`  
 **When** I call `completeTodo(id: "<known-id>")`  
-**Then** it returns the same todo with `done = true`
+**Then** it returns the same todo with `done = "done"`
 
 ### AC4: Reject empty title
 
@@ -65,10 +70,15 @@ Add in-memory todo list functionality to the `graphql` service. The existing `sr
 Define the following in a new file `src/schema.py`:
 
 ```python
+enum DoneStatus {
+  DONE
+  NOT_DONE
+}
+
 type Todo {
   id: String!
   title: String!
-  done: Boolean!
+  done: DoneStatus!
 }
 
 type Query {
@@ -86,12 +96,12 @@ type Mutation {
 
 Create `src/store.py`:
 
-- Data structure: `dict[str, dict]` keyed by todo `id`, where each value is `{"id": str, "title": str, "done": bool}`.
+- Data structure: `dict[str, dict]` keyed by todo `id`, where each value is `{"id": str, "title": str, "done": str}` (done is `"done"` or `"not done"`).
 - Module-level variable: `_todos: dict[str, dict] = {}` (resets when the process restarts).
 - Helper functions:
   - `get_all_todos() -> list[dict]`: return `list(_todos.values())`.
-  - `add_todo(title: str) -> dict`: generate unique `id` (use `uuid.uuid4().hex`), validate `title` is non-empty, store, return the todo dict.
-  - `complete_todo(id: str) -> dict`: validate `id` exists in `_todos`, set `done = True`, return the updated todo dict.
+  - `add_todo(title: str) -> dict`: generate unique `id` (use `uuid.uuid4().hex`), validate `title` is non-empty, store with `done = "not done"`, return the todo dict.
+  - `complete_todo(id: str) -> dict`: validate `id` exists in `_todos`, set `done = "done"`, return the updated todo dict.
 - Validation errors: raise `ValueError` with a descriptive message (resolver layer will convert to GraphQL error).
 
 ### Resolvers
@@ -111,8 +121,8 @@ Create `src/resolvers.py`:
 
 | File | Action | Notes |
 |------|--------|-------|
-| `src/schema.py` | create | GraphQL type defs and resolver bindings |
-| `src/store.py` | create | In-memory storage and business logic |
+| `src/schema.py` | create | GraphQL type defs (including `DoneStatus` enum) and resolver bindings |
+| `src/store.py` | create | In-memory storage and business logic; stores `done` as string `"done"` or `"not done"` |
 | `src/resolvers.py` | create | GraphQL resolver implementations |
 | `src/health.py` | unchanged | Existing health check stays intact |
 | `tests/test_todos.py` | create | Unit tests covering all six ACs |
@@ -124,9 +134,9 @@ Create `src/resolvers.py`:
 
 All six acceptance criteria map directly to test cases in `tests/test_todos.py`:
 
-1. **test_add_todo_with_valid_title** — AC1: call `addTodo("Buy milk")`, assert returned todo has correct `title`, `done=False`, and non-empty `id`.
+1. **test_add_todo_with_valid_title** — AC1: call `addTodo("Buy milk")`, assert returned todo has correct `title`, `done="not done"`, and non-empty `id`.
 2. **test_query_todos_includes_added** — AC2: add a todo, query `todos`, assert the list includes it.
-3. **test_complete_existing_todo** — AC3: add a todo, call `completeTodo(id)`, assert returned todo has `done=True`.
+3. **test_complete_existing_todo** — AC3: add a todo, call `completeTodo(id)`, assert returned todo has `done="done"`.
 4. **test_reject_empty_title** — AC4: call `addTodo("")`, assert error raised, query `todos` and confirm list is unchanged.
 5. **test_reject_unknown_id** — AC5: call `completeTodo("xyz")`, assert error raised.
 6. **test_health_unchanged** — AC6: call `health()`, assert response is `{"status": "ok"}`.
@@ -157,6 +167,7 @@ None.
 
 - **ID generation:** `uuid.uuid4().hex` produces unique string IDs; no collision risk in memory-only scope.
 - **Validation approach:** Business logic raises `ValueError`; resolvers catch and convert to GraphQL errors.
+- **Enum representation:** GraphQL schema defines `DoneStatus` enum (`DONE`, `NOT_DONE`); Python storage uses string literals `"done"` and `"not done"` matching the review feedback requirement.
 - **Process restart:** The in-memory store is deliberately ephemeral; no migration or persistence logic is needed.
 
 ---

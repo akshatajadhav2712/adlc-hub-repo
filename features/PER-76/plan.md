@@ -21,7 +21,7 @@ Changed done field from boolean to enum per inline review feedback; analyst reru
 
 ## Steps
 
-1. [ ] **analyst (inline_story)** _(rerun)_ — Regenerate requirements and story with done field as enum (done/not done) instead of boolean.
+1. [x] **analyst (inline_story)** — Regenerate requirements and story with done field as enum (done/not done) instead of boolean.
    - focus: Change the done field from boolean to an enum with values 'done' and 'not done', default 'not done'. Update the data model, operations, and all acceptance criteria accordingly.
 2. [ ] **architect_gate (review)** _(auto)_ _(rerun)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.

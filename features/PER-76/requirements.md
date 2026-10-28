@@ -10,6 +10,11 @@
 
 Extend the existing `graphql` service with a minimal in-memory todo list. The service already exposes `health()`; this story adds three GraphQL operations (`todos`, `addTodo`, `completeTodo`) and an in-memory store. No database, no UI, no authentication. The list resets when the process restarts.
 
+A todo has three fields:
+- `id`: string (unique, auto-generated)
+- `title`: string (user-provided)
+- `done`: enum with values `"done"` or `"not done"`, default `"not done"`
+
 ---
 
 ## Acceptance Criteria
@@ -18,7 +23,7 @@ Extend the existing `graphql` service with a minimal in-memory todo list. The se
 
 **Given** the todo list is empty  
 **When** I call `addTodo(title: "Buy milk")`  
-**Then** it returns a todo with `title = "Buy milk"`, `done = false`, and a unique `id`
+**Then** it returns a todo with `title = "Buy milk"`, `done = "not done"`, and a unique `id`
 
 ### AC2: Query all todos
 
@@ -28,9 +33,9 @@ Extend the existing `graphql` service with a minimal in-memory todo list. The se
 
 ### AC3: Complete an existing todo
 
-**Given** a todo with id `<known-id>` exists and `done = false`  
+**Given** a todo with id `<known-id>` exists and `done = "not done"`  
 **When** I call `completeTodo(id: "<known-id>")`  
-**Then** it returns the same todo with `done = true`
+**Then** it returns the same todo with `done = "done"`
 
 ### AC4: Reject empty title
 
@@ -54,9 +59,9 @@ Extend the existing `graphql` service with a minimal in-memory todo list. The se
 
 ## Technical Notes
 
-- **Schema:** Define a `Todo` type with fields `id: String!`, `title: String!`, `done: Boolean!`.
+- **Schema:** Define a `Todo` type with fields `id: String!`, `title: String!`, `done: DoneStatus!` where `DoneStatus` is an enum with values `DONE` and `NOT_DONE`.
 - **Resolvers:** Implement query `todos: [Todo!]!` and mutations `addTodo(title: String!): Todo!`, `completeTodo(id: String!): Todo!`.
-- **Storage:** Use an in-memory data structure (e.g., dict or list) to hold todos; no persistence layer.
+- **Storage:** Use an in-memory data structure (e.g., dict or list) to hold todos; no persistence layer. Store `done` as the enum value (`"done"` or `"not done"`).
 - **ID generation:** Use any approach that guarantees unique string IDs per todo (e.g., UUID, counter).
 - **Validation:** `addTodo` must reject empty strings; `completeTodo` must reject unknown IDs (both should raise a GraphQL error).
 - **Existing health:** Do not modify `src/health.py` or its behavior.
