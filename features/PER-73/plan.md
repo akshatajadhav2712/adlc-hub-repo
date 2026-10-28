@@ -26,9 +26,9 @@ Added description field (string, optional) to Reminder data model per inline fee
 2. [x] **tpm_gate (review)** — Five product decisions are explicitly flagged for review before technical work begins.
 3. [x] **ticketize (normalize)** _(auto)_ — Normalize proposed tickets after TPM approval.
 4. [x] **scrum_master (breakdown)** — The work splits into Part 1 (lists) and Part 2 (reminders) with a dependency, requiring ordered breakdown into implementable stories.
-5. [ ] **designer (lld)** _(rerun)_ — Each story needs concrete implementation details: in-memory data structure choices, GraphQL schema definitions, and validation logic.
+5. [x] **designer (lld)** — Each story needs concrete implementation details: in-memory data structure choices, GraphQL schema definitions, and validation logic.
    - focus: Add the description field (string, optional) to the Reminder data model in Story 02-graphql and update the schema, store, and tests accordingly.
-6. [ ] **test_architect (tests)** _(rerun)_ — Nine acceptance criteria with edge cases (duplicates, blanks, limits, past dates) need explicit test cases mapped 1:1.
+6. [x] **test_architect (tests)** — Nine acceptance criteria with edge cases (duplicates, blanks, limits, past dates) need explicit test cases mapped 1:1.
 7. [ ] **architect_gate (review)** _(auto)_ _(rerun)_ — Human approval of specs and this plan before Dev.
 8. [ ] **dev** _(auto)_ — Fixed execution step.
 9. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.

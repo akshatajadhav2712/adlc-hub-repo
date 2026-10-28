@@ -2,15 +2,15 @@
   "schema_version": 1,
   "key": "PER-73",
   "source": "llm",
-  "complexity": "moderate",
-  "summary": "This feature adds two-part in-memory reminder functionality to the GraphQL service with clear data models, operations, and validation rules; the structured nature and product decisions call for requirements analysis and breakdown, while the single-repo scope keeps the plan lightweight.",
+  "complexity": "simple",
+  "summary": "Add reminder lists and reminders to the GraphQL service with in-memory storage; the work splits into two sequential stories (lists, then reminders) with validation and tests.",
   "track_hint": "standard",
   "steps": [
     {
       "node": "analyst",
       "activity": "requirements",
       "why": "The ticket contains product decisions awaiting review and multiple acceptance criteria that need formal Given/When/Then requirements.",
-      "instructions": "Focus on the product decisions (uniqueness, cascading deletes, validation limits); map each AC to requirements; ensure Part 1/Part 2 ordering is clear.",
+      "instructions": "",
       "auto": false,
       "status": "done",
       "rerun": false
@@ -37,7 +37,7 @@
       "node": "scrum_master",
       "activity": "breakdown",
       "why": "The work splits into Part 1 (lists) and Part 2 (reminders) with a dependency, requiring ordered breakdown into implementable stories.",
-      "instructions": "Create one story for reminder lists (Part 1) and one for reminders (Part 2); ensure Part 2 depends on Part 1; each story covers its mutations, queries, validation, and tests.",
+      "instructions": "",
       "auto": false,
       "status": "done",
       "rerun": false
@@ -46,7 +46,7 @@
       "node": "designer",
       "activity": "lld",
       "why": "Each story needs concrete implementation details: in-memory data structure choices, GraphQL schema definitions, and validation logic.",
-      "instructions": "Specify the in-memory store design (dictionaries vs classes), GraphQL type definitions, resolver signatures, and validation flows for each operation.",
+      "instructions": "Add the description field (string, optional) to the Reminder data model in Story 02-graphql and update the schema, store, and tests accordingly.",
       "auto": false,
       "status": "done",
       "rerun": false
@@ -55,7 +55,7 @@
       "node": "test_architect",
       "activity": "tests",
       "why": "Nine acceptance criteria with edge cases (duplicates, blanks, limits, past dates) need explicit test cases mapped 1:1.",
-      "instructions": "Map each AC to test cases; cover positive paths, validation rejections, and edge cases like blank strings and boundary limits.",
+      "instructions": "",
       "auto": false,
       "status": "done",
       "rerun": false
@@ -67,7 +67,7 @@
       "instructions": "",
       "auto": true,
       "status": "pending",
-      "rerun": false
+      "rerun": true
     },
     {
       "node": "dev",
@@ -127,16 +127,45 @@
   ],
   "suggested_roles": [],
   "notes": [],
-  "created_at": "2026-10-28T10:31:51.288029+00:00",
-  "version": 1,
-  "trigger": "ticket",
-  "gate": null,
-  "feedback": [],
+  "created_at": "2026-10-28T10:48:47.389506+00:00",
+  "version": 2,
+  "trigger": "review",
+  "gate": "architect_review",
+  "feedback": [
+    {
+      "id": "hub#17:inline-4399635104",
+      "source": "pr_inline",
+      "body": "add description field as well which takes reminder description data type is string and filed is optional",
+      "author": "akshatajadhav2712",
+      "path": "features/PER-73/breakdown.md",
+      "line": 47,
+      "pr": "hub#17"
+    }
+  ],
   "feedback_errors": [],
-  "seen_feedback_ids": [],
-  "change_summary": "",
-  "changes": null,
-  "addressed": [],
+  "seen_feedback_ids": [
+    "hub#17:inline-4399635104"
+  ],
+  "change_summary": "Added description field (string, optional) to Reminder data model per inline feedback; designer reruns Story 02-graphql to update the LLD.",
+  "changes": {
+    "added": [],
+    "removed": [],
+    "rerun": [
+      "designer",
+      "test_architect"
+    ],
+    "kept": [
+      "analyst",
+      "tpm_gate",
+      "scrum_master"
+    ]
+  },
+  "addressed": [
+    {
+      "feedback_id": "hub#17:inline-4399635104",
+      "change": "designer reruns Story 02-graphql with instruction to add description field to Reminder"
+    }
+  ],
   "unresolved_questions": [],
   "requires_review": true
 }
