@@ -324,7 +324,7 @@ None; all product decisions resolved per requirements.
 
 ## Dependencies
 
-- **Python:** 3.10+ (for type hints like `dict | None`)
+- **Python:** 3.11+ (required for `datetime.fromisoformat()` to correctly parse ISO-8601 dates with fractional seconds and Z suffix; see comment 4400141371)
 - **GraphQL library:** Strawberry, Graphene, or Ariadne (choose based on existing `src/health.py` implementation; likely Strawberry or Graphene given Python ecosystem)
 - **Testing:** pytest + GraphQL test client (e.g. `strawberry.test.client` or `graphene.test.Client`)
 
@@ -336,3 +336,4 @@ None; all product decisions resolved per requirements.
 - **Sorting:** `lists` query sorts by `name.lower()` for case-insensitive alphabetical order.
 - **Error messages:** Validation errors include context (e.g. "List name must be between 1 and 50 characters", "List name already exists").
 - **Story 2 impact:** The `deleteList` resolver will be extended to cascade-delete reminders; `_reminders` dict will be added to `src/store.py`. The `description` field in the Reminder type will be implemented in Story 2.
+- **Python version requirement:** Python 3.11+ is required for correct ISO-8601 parsing with fractional seconds (comment 4400141371). For Python <3.11, use `datetime.strptime()` with explicit format or a library like `python-dateutil`.

@@ -194,7 +194,7 @@ def delete_list(list_id: str) -> bool:
 - `add_reminder` validates `list_id` exists via `get_list_by_id(list_id)`.
 - `description` field stored as None if not provided or if empty/blank string passed.
 - `delete_list` updated to iterate `_list_reminders[list_id]` and remove each reminder from `_reminders`, then clear the list entry.
-- Sorting by `dueAt` requires parsing ISO-8601 strings for comparison.
+- Sorting by `dueAt` requires parsing ISO-8601 strings for comparison; invalid `dueAt` values are filtered out before sorting to prevent sort crashes (see comment 4400141365).
 
 ---
 
@@ -215,11 +215,13 @@ def validate_reminder_description(description: str | None) -> str | None:
     ...
 
 def parse_iso8601(date_str: str) -> datetime:
-    """Parses ISO-8601 date-time string; raises ValueError if invalid."""
+    """Parses ISO-8601 date-time string; raises ValueError if invalid.
+    Uses strptime with fractional seconds support for Python <3.11 compatibility (see comment 4400141371)."""
     ...
 
 def validate_future_date(date_str: str) -> None:
-    """Raises ValueError if parsed datetime is not in the future (UTC comparison)."""
+    """Raises ValueError if parsed datetime is not strictly in the future (> now UTC, not >=).
+    Rejects dates equal to current time (see comment 4400141386)."""
     ...
 ```
 
@@ -238,7 +240,7 @@ def validate_future_date(date_str: str) -> None:
 2. Validate text: `validate_reminder_text(text)` (raises if empty, blank, or >200 chars)
 3. Validate description: `normalized_description = validate_reminder_description(description)` (returns None if empty/blank, raises if >500 chars)
 4. Validate date format: `parsed_date = parse_iso8601(dueAt)` (raises if invalid)
-5. Validate future: `validate_future_date(dueAt)` (raises if past or present)
+5. Validate future: `validate_future_date(dueAt)` (raises if past or equal to current time)
 6. Generate id: `reminder_id = str(uuid4())`
 7. Create reminder dict: `{"id": reminder_id, "listId": listId, "text": text, "description": normalized_description, "dueAt": dueAt, "done": False}`
 8. Store reminder: `_reminders[reminder_id] = reminder_dict`
@@ -250,8 +252,9 @@ def validate_future_date(date_str: str) -> None:
 1. Get reminder ids: `reminder_ids = _list_reminders.get(listId, [])`
 2. Fetch reminders: `reminders_list = [_reminders[rid] for rid in reminder_ids]`
 3. Filter by done: if not `includeDone`, filter out reminders where `done == True`
-4. Sort by dueAt: `sorted(reminders_list, key=lambda r: parse_iso8601(r["dueAt"]))`
-5. Return sorted list
+4. Filter invalid dueAt: remove reminders where `parse_iso8601(r["dueAt"])` raises ValueError (prevents sort crash per comment 4400141365)
+5. Sort by dueAt: `sorted(reminders_list, key=lambda r: parse_iso8601(r["dueAt"]))`
+6. Return sorted list
 
 ### completeReminder(id: String!)
 
@@ -283,7 +286,7 @@ When querying `list(id).reminders` or `lists.reminders`:
 
 **File:** `tests/test_reminders.py`
 
-**Test count: 14 tests** (maps 1:1 to breakdown verification approach; complete AC coverage)
+**Test count: 18 tests** (maps 1:1 to breakdown verification approach plus additional coverage for review comments; complete AC coverage)
 
 ### Test cases (mapped to requirements and breakdown)
 
@@ -307,7 +310,12 @@ When querying `list(id).reminders` or `lists.reminders`:
 15. **REQ-9 / AC5 (description field) / Review feedback:** `test_add_reminder_with_description` — `addReminder(listId: "<valid>", text: "Pay rent", description: "Monthly rent payment", dueAt: "<future>")` creates reminder with description field populated
 16. **REQ-10 / AC6 (description over limit) / Review feedback:** `test_add_reminder_description_too_long` — `addReminder(listId: "<valid>", text: "Task", description: "<501-char string>", dueAt: "<future>")` raises GraphQLError, adds nothing
 
-**Total test count: 16 tests** (14 from breakdown + 2 for description field per review feedback)
+### Additional tests for PR review comments
+
+17. **Comment 4400141386 (exact "now" edge case):** `test_add_reminder_exact_now_rejected` — `addReminder(listId: "<valid>", text: "Task", dueAt: "<datetime.now(timezone.utc).isoformat()>")` raises GraphQLError with "must be in the future"; verify a date 1 second ahead is accepted
+18. **Comment 4400141393 (blank description):** `test_add_reminder_blank_description` — `addReminder(listId: "<valid>", text: "Task", description: "   ", dueAt: "<future>")` creates reminder with `description: null` (normalized per LLD)
+
+**Total test count: 18 tests** (14 from breakdown + 2 for description field + 2 for PR review comments)
 
 ### Test structure
 
@@ -321,6 +329,7 @@ Each test:
 
 ```python
 from datetime import datetime, timedelta, timezone
+import time
 
 def test_add_reminder_success():
     # Setup: create a list
@@ -369,6 +378,22 @@ def test_add_reminder_with_description():
     reminder = result["data"]["addReminder"]
     assert reminder["description"] == "Monthly rent payment"
 
+def test_add_reminder_blank_description():
+    list_result = execute_graphql('mutation { addList(name: "Home") { id } }')
+    list_id = list_result["data"]["addList"]["id"]
+    
+    future_date = (datetime.now(timezone.utc) + timedelta(days=1)).isoformat()
+    result = execute_graphql(f'''
+        mutation {{
+            addReminder(listId: "{list_id}", text: "Task", description: "   ", dueAt: "{future_date}") {{
+                id description
+            }}
+        }}
+    ''')
+    
+    reminder = result["data"]["addReminder"]
+    assert reminder["description"] is None  # Normalized to null per LLD
+
 def test_add_reminder_description_too_long():
     list_result = execute_graphql('mutation { addList(name: "Home") { id } }')
     list_id = list_result["data"]["addList"]["id"]
@@ -385,6 +410,37 @@ def test_add_reminder_description_too_long():
     
     assert "errors" in result
     assert "500" in result["errors"][0]["message"] or "description" in result["errors"][0]["message"].lower()
+
+def test_add_reminder_exact_now_rejected():
+    list_result = execute_graphql('mutation { addList(name: "Home") { id } }')
+    list_id = list_result["data"]["addList"]["id"]
+    
+    # Test exact "now" is rejected
+    now_date = datetime.now(timezone.utc).isoformat()
+    result = execute_graphql(f'''
+        mutation {{
+            addReminder(listId: "{list_id}", text: "Task", dueAt: "{now_date}") {{
+                id
+            }}
+        }}
+    ''')
+    
+    assert "errors" in result
+    assert "future" in result["errors"][0]["message"].lower()
+    
+    # Test 1 second ahead is accepted
+    time.sleep(1.1)  # Ensure clock advances
+    future_date = datetime.now(timezone.utc).isoformat()
+    result2 = execute_graphql(f'''
+        mutation {{
+            addReminder(listId: "{list_id}", text: "Task", dueAt: "{future_date}") {{
+                id
+            }}
+        }}
+    ''')
+    
+    assert "data" in result2
+    assert result2["data"]["addReminder"]["id"] is not None
 
 def test_add_reminder_past_date():
     list_result = execute_graphql('mutation { addList(name: "Home") { id } }')
@@ -449,28 +505,29 @@ def test_delete_list_cascades_reminders():
 ## Edge Cases
 
 1. **Blank text:** Whitespace-only strings (`"   "`) are treated as empty (rejected per product decision 5).
-2. **Blank description:** Empty or whitespace-only description is normalized to None (valid, optional field).
-3. **Past dates:** Any `dueAt` ≤ current UTC time is rejected with "dueAt must be in the future" error.
+2. **Blank description:** Empty or whitespace-only description is normalized to None (valid, optional field) — explicitly tested (comment 4400141393).
+3. **Past dates:** Any `dueAt` ≤ current UTC time is rejected with "dueAt must be in the future" error — includes exact "now" (comment 4400141386).
 4. **Invalid ISO-8601:** Malformed date strings (e.g. `"not-a-date"`, `"2023-13-01"`) raise parsing error.
 5. **Unknown listId:** `addReminder` validates list existence before creating reminder.
 6. **Unknown reminder id:** `completeReminder` validates reminder existence before updating.
 7. **Cascade delete:** Deleting a list removes all its reminders from `_reminders` and `_list_reminders`; no orphaned reminders.
-8. **Sorting edge cases:** Reminders with identical `dueAt` values maintain insertion order (stable sort).
+8. **Sorting edge cases:** Reminders with identical `dueAt` values maintain insertion order (stable sort); invalid `dueAt` values filtered before sorting to prevent crashes (comment 4400141365).
 9. **includeDone default:** `reminders` query defaults to `includeDone: false`; done reminders excluded unless explicitly requested.
 10. **Description length:** Valid range is 0–500 characters after normalization (blank → None).
 11. **Concurrent requests:** In-memory store is not thread-safe; assume single-threaded execution (typical for development GraphQL servers). Production would require locking or atomic operations.
+12. **ISO-8601 fractional seconds:** `parse_iso8601` implementation handles fractional seconds for Python <3.11 compatibility using `strptime` (comment 4400141371).
 
 ---
 
 ## Open Questions
 
-None; all product decisions resolved per requirements. Description field added per review feedback.
+None; all product decisions resolved per requirements. Description field added per review feedback. PR review comments addressed (sort crash prevention, Python <3.11 fractional seconds, exact "now" edge case, blank description test).
 
 ---
 
 ## Dependencies
 
-- **Python:** 3.10+ (for type hints like `dict | None`)
+- **Python:** 3.10+ (for type hints like `dict | None`); Python 3.11+ recommended for native `fromisoformat()` fractional seconds support, but code includes fallback for <3.11 (comment 4400141371)
 - **GraphQL library:** Strawberry, Graphene, or Ariadne (same as Story 1)
 - **Testing:** pytest + GraphQL test client
 - **Story 1 completion:** This story extends `src/schema.py`, `src/resolvers.py`, `src/store.py`, and `src/validation.py` from Story 1
@@ -480,10 +537,10 @@ None; all product decisions resolved per requirements. Description field added p
 ## Notes
 
 - **ID generation:** Use `uuid.uuid4()` for unique, non-sequential reminder ids.
-- **ISO-8601 parsing:** Use `datetime.fromisoformat()` (Python 3.7+) or `dateutil.parser.isoparse()` for strict parsing.
-- **Future validation:** Compare `parse_iso8601(dueAt)` to `datetime.now(timezone.utc)`; reject if ≤.
-- **Sorting:** `reminders` query sorts by parsed datetime (oldest first): `sorted(reminders, key=lambda r: parse_iso8601(r["dueAt"]))`.
-- **Description handling:** Optional field; blank/empty values normalized to None during validation; stored as None in reminder dict.
+- **ISO-8601 parsing:** Use `datetime.fromisoformat()` (Python 3.11+) or `datetime.strptime('%Y-%m-%dT%H:%M:%S.%fZ', date_str)` for strict parsing with fractional seconds support on Python <3.11 (comment 4400141371).
+- **Future validation:** Compare `parse_iso8601(dueAt)` to `datetime.now(timezone.utc)` with strict `>` (not `>=`) to reject exact "now" (comment 4400141386).
+- **Sorting:** `reminders` query filters out reminders with unparseable `dueAt` before sorting (comment 4400141365), then sorts by parsed datetime (oldest first): `sorted(reminders, key=lambda r: parse_iso8601(r["dueAt"]))`.
+- **Description handling:** Optional field; blank/empty values normalized to None during validation; stored as None in reminder dict — explicitly tested (comment 4400141393).
 - **Cascade implementation:** `delete_list` in `src/store.py` updated to iterate `_list_reminders[list_id]` and remove each reminder before deleting the list.
 - **Story 1 compatibility:** All Story 1 operations and tests remain unchanged; `deleteList` behavior transparently extended (no breaking changes).
 - **Error messages:** Validation errors include context (e.g. "Reminder text must be between 1 and 200 characters", "Description must not exceed 500 characters", "dueAt must be in the future", "List not found").

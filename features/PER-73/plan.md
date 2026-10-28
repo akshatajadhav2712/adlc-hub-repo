@@ -31,8 +31,8 @@ Added description field (string, optional) to Reminder data model per inline fee
 6. [x] **test_architect (tests)** — Nine acceptance criteria with edge cases (duplicates, blanks, limits, past dates) need explicit test cases mapped 1:1.
 7. [x] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
 8. [ ] **dev** _(auto)_ — Fixed execution step.
-9. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.
-10. [ ] **open_pr** _(auto)_ — Fixed execution step.
+9. [x] **pre_pr_qa** _(auto)_ — Fixed execution step.
+10. [x] **open_pr** _(auto)_ — Fixed execution step.
 11. [ ] **pr_review** _(auto)_ — Fixed execution step.
 12. [ ] **merge** _(auto)_ — Fixed execution step.
 

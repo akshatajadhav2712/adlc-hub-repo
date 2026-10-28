@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 key: PER-73
-status: developed
+status: in_development
 current_node: dev
 track: standard
 involved_repos:
@@ -9,7 +9,7 @@ involved_repos:
 depends_on: []
 owner: aksj
 lease_until: '2026-10-30T11:20:50.484593+00:00'
-revision: 53
+revision: 61
 hub_sha: null
 ticket_hash: d54ac98949d719cf
 jira_hash: d54ac98949d719cf
@@ -25,7 +25,7 @@ child_ticket_keys:
 - PER-75
 critic_iterations: 0
 dev_retries: 0
-pr_revision_rounds: 0
+pr_revision_rounds: 1
 gate_rounds:
   plan: 1
   architect: 1
@@ -34,10 +34,11 @@ pr_ids:
   hub_plan: '18'
   hub_arch: '19'
   hub: '19'
-waiting_for: human_pr
-tokens_in: 214935
-tokens_out: 46869
-cost_anthropic_usd: 1.347472
+  graphql: '4'
+waiting_for: null
+tokens_in: 295255
+tokens_out: 60102
+cost_anthropic_usd: 1.777971
 history:
 - node: intake
   note: snapshot written
@@ -149,6 +150,63 @@ history:
 - node: dev
   note: 'human_mode: code ready, PR deferred'
   at: '2026-10-28T11:29:04.747013+00:00'
+- node: dev
+  note: 'human_mode: resume opens PR'
+  at: '2026-10-28T11:43:30.269794+00:00'
+- node: pre_pr_qa
+  note: report written
+  at: '2026-10-28T11:43:30.384733+00:00'
+- node: open_pr
+  note: push graphql ok
+  at: '2026-10-28T11:43:50.312771+00:00'
+- node: open_pr
+  note: PRs opened graphql:4
+  at: '2026-10-28T11:43:50.312874+00:00'
+- node: pr_review
+  note: diff loaded graphql chars=37889
+  at: '2026-10-28T11:43:52.903725+00:00'
+- node: pr_review
+  note: 'inline review graphql: 6 comment(s)'
+  at: '2026-10-28T11:45:01.574022+00:00'
+- node: pr_review
+  note: 'graphql:issue:moderate:**Bug: Sort key fails when dueAt is invalid ISO-8601.**
+    `parse_iso8601` is calle'
+  at: '2026-10-28T11:45:11.133284+00:00'
+- node: pr_review
+  note: 'graphql:issue:moderate:**Bug: `fromisoformat` rejects valid ISO-8601 with
+    fractional seconds in Python '
+  at: '2026-10-28T11:45:17.911919+00:00'
+- node: pr_review
+  note: 'graphql:needs_human:moderate:**AC gap: `validate_future_date` uses `<=` instead
+    of `<`.** Product decision 3 '
+  at: '2026-10-28T11:45:25.297643+00:00'
+- node: pr_review
+  note: 'graphql:issue:minor:**Test gap: No coverage for the exact "now" edge case.**
+    AC6 says "a past date i'
+  at: '2026-10-28T11:45:31.128138+00:00'
+- node: pr_review
+  note: 'graphql:issue:minor:**Test coverage gap: No test for blank description (whitespace-only).**
+    AC5 says'
+  at: '2026-10-28T11:45:36.439068+00:00'
+- node: pr_review
+  note: 'graphql:needs_human:moderate:**Process note: No executable entry point or
+    server setup.** The schema and reso'
+  at: '2026-10-28T11:45:41.860797+00:00'
+- node: pr_review
+  note: auto-fix tier=moderate round=1
+  at: '2026-10-28T11:45:45.907117+00:00'
+- node: pr_review
+  note: "route moderate \u2192 designer then dev"
+  at: '2026-10-28T11:45:46.839267+00:00'
+- node: designer
+  note: lld updated
+  at: '2026-10-28T11:48:26.132882+00:00'
+- node: dev
+  note: starting
+  at: '2026-10-28T11:48:26.133092+00:00'
+- node: dev
+  note: done 01-graphql (verify-ok; agent status=error)
+  at: '2026-10-28T11:53:31.826061+00:00'
 ---
 
 # Feature state

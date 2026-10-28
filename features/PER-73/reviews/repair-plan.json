@@ -1,0 +1,39 @@
+{
+  "comment_ids": [
+    "4400141365",
+    "4400141371",
+    "4400141386",
+    "4400141393"
+  ],
+  "tier": "moderate",
+  "stories": [
+    "01-graphql",
+    "02-graphql"
+  ],
+  "items": [
+    {
+      "comment_id": "4400141365",
+      "repo": "graphql",
+      "path": "src/store.py",
+      "tier": "moderate"
+    },
+    {
+      "comment_id": "4400141371",
+      "repo": "graphql",
+      "path": "src/validation.py",
+      "tier": "moderate"
+    },
+    {
+      "comment_id": "4400141386",
+      "repo": "graphql",
+      "path": "tests/test_reminders.py",
+      "tier": "minor"
+    },
+    {
+      "comment_id": "4400141393",
+      "repo": "graphql",
+      "path": "tests/test_reminders.py",
+      "tier": "minor"
+    }
+  ]
+}
