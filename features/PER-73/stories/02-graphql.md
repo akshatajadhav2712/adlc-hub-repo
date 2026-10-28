@@ -10,7 +10,7 @@
 
 ## Acceptance Criteria (from requirements + breakdown)
 
-- **AC5:** addReminder(<Home id>, "Pay rent", <tomorrow>) returns a reminder with that text, dueAt, listId, and done false; list(id).reminders includes it.
+- **AC5:** addReminder(<Home id>, "Pay rent", <tomorrow>) returns a reminder with that text, dueAt, listId, description (if provided), and done false; list(id).reminders includes it.
 - **AC6:** addReminder with an unknown listId, empty or blank text, text over the limit, an invalid date, or a past date is rejected and adds nothing.
 - **AC7:** reminders returns open reminders of that list sorted by dueAt; done reminders appear only with includeDone: true.
 - **AC8:** completeReminder sets done to true; an unknown id is rejected.
@@ -24,10 +24,10 @@ All paths below exist in the repo tree or are new files in established directori
 
 ### Modified files
 
-- `src/schema.py` — Add reminder queries and mutations to existing schema
+- `src/schema.py` — Add reminder queries and mutations to existing schema; add description field to Reminder type
 - `src/resolvers.py` — Add reminder resolver functions; update `deleteList` for cascade
 - `src/store.py` — Add in-memory structure for reminders; update `delete_list` for cascade
-- `src/validation.py` — Add reminder validation (text length, date parsing, future check)
+- `src/validation.py` — Add reminder validation (text length, description length, date parsing, future check)
 
 ### New files
 
@@ -52,11 +52,12 @@ Represented as a Python dictionary (formalized as GraphQL type in `src/schema.py
 
 ```python
 {
-    "id": str,          # Unique identifier (UUID v4)
-    "listId": str,      # References a ReminderList; must exist at creation
-    "text": str,        # 1–200 characters, non-blank
-    "dueAt": str,       # ISO-8601 date-time string; must be future at creation
-    "done": bool        # Default False
+    "id": str,             # Unique identifier (UUID v4)
+    "listId": str,         # References a ReminderList; must exist at creation
+    "text": str,           # 1–200 characters, non-blank
+    "description": str | None,  # Optional, 0–500 characters if provided
+    "dueAt": str,          # ISO-8601 date-time string; must be future at creation
+    "done": bool           # Default False
 }
 ```
 
@@ -64,6 +65,7 @@ Represented as a Python dictionary (formalized as GraphQL type in `src/schema.py
 - `id` is unique across all reminders
 - `listId` references a valid ReminderList (validated at creation)
 - `text` is non-empty, non-blank (no whitespace-only), ≤200 characters
+- `description` is optional; if provided, ≤500 characters, can be empty/blank (stored as None)
 - `dueAt` is a valid ISO-8601 string and represents a future datetime at creation
 - `done` defaults to `False`
 
@@ -76,11 +78,12 @@ Represented as a Python dictionary (formalized as GraphQL type in `src/schema.py
 **Additions to existing schema:**
 
 ```graphql
-# Reminder type already defined in Story 1; no changes needed
+# Reminder type updated from Story 1 to include description field
 type Reminder {
   id: String!
   listId: String!
   text: String!
+  description: String
   dueAt: String!
   done: Boolean!
 }
@@ -92,14 +95,15 @@ extend type Query {
 
 # Add to Mutation type
 extend type Mutation {
-  addReminder(listId: String!, text: String!, dueAt: String!): Reminder!
+  addReminder(listId: String!, text: String!, description: String, dueAt: String!): Reminder!
   completeReminder(id: String!): Reminder!
 }
 ```
 
 **Notes:**
-- `Reminder` type was defined in Story 1 schema (unused there); now activated.
-- `ReminderList.reminders` field now populated with actual reminder data.
+- `description` field added to `Reminder` type (nullable String)
+- `addReminder` mutation accepts optional `description` parameter
+- `ReminderList.reminders` field now populated with actual reminder data including description
 
 ---
 
@@ -115,9 +119,9 @@ def resolve_reminders(info, listId: str, includeDone: bool = False) -> list[dict
     ...
 
 # Mutations
-def resolve_add_reminder(info, listId: str, text: str, dueAt: str) -> dict:
+def resolve_add_reminder(info, listId: str, text: str, dueAt: str, description: str | None = None) -> dict:
     """Creates a reminder in the specified list.
-    Raises GraphQLError on validation failure (unknown listId, invalid text/date, past date)."""
+    Raises GraphQLError on validation failure (unknown listId, invalid text/description/date, past date)."""
     ...
 
 def resolve_complete_reminder(info, id: str) -> dict:
@@ -168,9 +172,9 @@ def get_reminder_by_id(reminder_id: str) -> dict | None:
     """Returns a reminder by id, or None if not found."""
     ...
 
-def add_reminder(list_id: str, text: str, due_at: str) -> dict:
+def add_reminder(list_id: str, text: str, due_at: str, description: str | None = None) -> dict:
     """Creates a new reminder with unique id and done=False.
-    Raises ValueError on validation failure (unknown listId, invalid text/date, past date)."""
+    Raises ValueError on validation failure (unknown listId, invalid text/description/date, past date)."""
     ...
 
 def complete_reminder(reminder_id: str) -> dict:
@@ -188,6 +192,7 @@ def delete_list(list_id: str) -> bool:
 - `_reminders` maps `id -> reminder_dict` for O(1) lookup.
 - `_list_reminders` maps `list_id -> [reminder_ids]` for efficient cascade delete and filtered queries.
 - `add_reminder` validates `list_id` exists via `get_list_by_id(list_id)`.
+- `description` field stored as None if not provided or if empty/blank string passed.
 - `delete_list` updated to iterate `_list_reminders[list_id]` and remove each reminder from `_reminders`, then clear the list entry.
 - Sorting by `dueAt` requires parsing ISO-8601 strings for comparison.
 
@@ -204,6 +209,11 @@ def validate_reminder_text(text: str) -> None:
     """Raises ValueError if text is empty, blank, or exceeds 200 characters."""
     ...
 
+def validate_reminder_description(description: str | None) -> str | None:
+    """Validates description field. Returns None if input is None, empty, or blank.
+    Raises ValueError if exceeds 500 characters."""
+    ...
+
 def parse_iso8601(date_str: str) -> datetime:
     """Parses ISO-8601 date-time string; raises ValueError if invalid."""
     ...
@@ -214,27 +224,26 @@ def validate_future_date(date_str: str) -> None:
 ```
 
 **Rules:**
-- Empty string (`""`) → ValueError
-- Whitespace-only (`"   "`) → ValueError (blank check)
-- Length > 200 → ValueError
-- Invalid ISO-8601 format → ValueError
-- Past datetime (≤ now UTC) → ValueError ("dueAt must be in the future")
+- **text:** Empty string (`""`) → ValueError; whitespace-only (`"   "`) → ValueError; length > 200 → ValueError
+- **description:** None, empty, or whitespace-only → normalized to None (valid); length > 500 → ValueError
+- **dueAt:** Invalid ISO-8601 format → ValueError; past datetime (≤ now UTC) → ValueError ("dueAt must be in the future")
 
 ---
 
 ## Algorithm Notes
 
-### addReminder(listId: String!, text: String!, dueAt: String!)
+### addReminder(listId: String!, text: String!, dueAt: String!, description: String?)
 
 1. Validate list exists: `list_dict = get_list_by_id(listId)`; if None, raise ValueError("List not found")
 2. Validate text: `validate_reminder_text(text)` (raises if empty, blank, or >200 chars)
-3. Validate date format: `parsed_date = parse_iso8601(dueAt)` (raises if invalid)
-4. Validate future: `validate_future_date(dueAt)` (raises if past or present)
-5. Generate id: `reminder_id = str(uuid4())`
-6. Create reminder dict: `{"id": reminder_id, "listId": listId, "text": text, "dueAt": dueAt, "done": False}`
-7. Store reminder: `_reminders[reminder_id] = reminder_dict`
-8. Link to list: `_list_reminders.setdefault(listId, []).append(reminder_id)`
-9. Return reminder dict
+3. Validate description: `normalized_description = validate_reminder_description(description)` (returns None if empty/blank, raises if >500 chars)
+4. Validate date format: `parsed_date = parse_iso8601(dueAt)` (raises if invalid)
+5. Validate future: `validate_future_date(dueAt)` (raises if past or present)
+6. Generate id: `reminder_id = str(uuid4())`
+7. Create reminder dict: `{"id": reminder_id, "listId": listId, "text": text, "description": normalized_description, "dueAt": dueAt, "done": False}`
+8. Store reminder: `_reminders[reminder_id] = reminder_dict`
+9. Link to list: `_list_reminders.setdefault(listId, []).append(reminder_id)`
+10. Return reminder dict
 
 ### reminders(listId: String!, includeDone: Boolean = false)
 
@@ -274,24 +283,31 @@ When querying `list(id).reminders` or `lists.reminders`:
 
 **File:** `tests/test_reminders.py`
 
-**Test count: 14** (matches breakdown Verification Approach count)
+**Test count: 14 tests** (maps 1:1 to breakdown verification approach; complete AC coverage)
 
-### Test cases (mapped to requirements)
+### Test cases (mapped to requirements and breakdown)
 
-1. **REQ-9 / AC5:** `test_add_reminder_success` — `addReminder(listId: "<valid>", text: "Pay rent", dueAt: "<future ISO-8601>")` creates reminder with unique id, provided text, dueAt, listId, done false; `list(id).reminders` includes it
-2. **REQ-10 / AC6 (unknown listId):** `test_add_reminder_unknown_list` — `addReminder(listId: "unknown", ...)` raises GraphQLError, adds nothing
-3. **REQ-10 / AC6 (empty text):** `test_add_reminder_empty_text` — `addReminder(listId: "<valid>", text: "", ...)` raises GraphQLError, adds nothing
-4. **REQ-10 / AC6 (blank text):** `test_add_reminder_blank_text` — `addReminder(listId: "<valid>", text: "   ", ...)` raises GraphQLError, adds nothing
-5. **REQ-10 / AC6 (over limit):** `test_add_reminder_text_too_long` — `addReminder(listId: "<valid>", text: "<201-char string>", ...)` raises GraphQLError, adds nothing
-6. **REQ-10 / AC6 (invalid date):** `test_add_reminder_invalid_date` — `addReminder(listId: "<valid>", text: "Task", dueAt: "not-a-date")` raises GraphQLError, adds nothing
-7. **REQ-10 / AC6 (past date):** `test_add_reminder_past_date` — `addReminder(listId: "<valid>", text: "Task", dueAt: "2020-01-01T00:00:00Z")` raises GraphQLError, adds nothing
-8. **REQ-11 / AC7 (default excludes done):** `test_reminders_excludes_done_by_default` — `reminders(listId: "<valid>")` returns only open reminders sorted by dueAt oldest first
-9. **REQ-11 / AC7 (includeDone true):** `test_reminders_includes_done_when_requested` — `reminders(listId: "<valid>", includeDone: true)` returns all reminders (done and open) sorted by dueAt oldest first
-10. **REQ-12 / AC8 (success):** `test_complete_reminder_success` — `completeReminder(id: "<valid>")` sets done to true, returns updated reminder
-11. **REQ-13 / AC8 (unknown id):** `test_complete_reminder_unknown_id` — `completeReminder(id: "unknown")` raises GraphQLError, modifies nothing
-12. **REQ-7 (cascade delete):** `test_delete_list_cascades_reminders` — `deleteList(id: "<valid with reminders>")` deletes list and all its reminders; subsequent `reminders(listId: "<deleted>")` returns empty array
-13. **REQ-14 / AC9 (health unchanged):** `test_health_unchanged` — `health()` returns exactly `{"status": "ok"}`
-14. **REQ-14 / AC9 (Story 1 operations unchanged):** `test_story1_operations_unchanged` — All Story 1 operations (lists, list, addList, renameList, deleteList structure) remain unchanged; cascade delete is transparent extension
+1. **REQ-9 / AC5 / Breakdown #1:** `test_add_reminder_success` — `addReminder(listId: "<valid>", text: "Pay rent", dueAt: "<future ISO-8601>")` creates reminder with unique id, provided text, dueAt, listId, description None, done false; `list(id).reminders` includes it
+2. **REQ-10 / AC6 (unknown listId) / Breakdown #2:** `test_add_reminder_unknown_list` — `addReminder(listId: "unknown", ...)` raises GraphQLError, adds nothing
+3. **REQ-10 / AC6 (empty text) / Breakdown #3:** `test_add_reminder_empty_text` — `addReminder(listId: "<valid>", text: "", ...)` raises GraphQLError, adds nothing
+4. **REQ-10 / AC6 (blank text) / Breakdown #4:** `test_add_reminder_blank_text` — `addReminder(listId: "<valid>", text: "   ", ...)` raises GraphQLError, adds nothing
+5. **REQ-10 / AC6 (over limit) / Breakdown #5:** `test_add_reminder_text_too_long` — `addReminder(listId: "<valid>", text: "<201-char string>", ...)` raises GraphQLError, adds nothing
+6. **REQ-10 / AC6 (invalid date) / Breakdown #6:** `test_add_reminder_invalid_date` — `addReminder(listId: "<valid>", text: "Task", dueAt: "not-a-date")` raises GraphQLError, adds nothing
+7. **REQ-10 / AC6 (past date) / Breakdown #7:** `test_add_reminder_past_date` — `addReminder(listId: "<valid>", text: "Task", dueAt: "2020-01-01T00:00:00Z")` raises GraphQLError, adds nothing
+8. **REQ-11 / AC7 (default excludes done) / Breakdown #8:** `test_reminders_excludes_done_by_default` — `reminders(listId: "<valid>")` returns only open reminders sorted by dueAt oldest first
+9. **REQ-11 / AC7 (includeDone true) / Breakdown #9:** `test_reminders_includes_done_when_requested` — `reminders(listId: "<valid>", includeDone: true)` returns all reminders (done and open) sorted by dueAt oldest first
+10. **REQ-12 / AC8 (success) / Breakdown #10:** `test_complete_reminder_success` — `completeReminder(id: "<valid>")` sets done to true, returns updated reminder
+11. **REQ-13 / AC8 (unknown id) / Breakdown #11:** `test_complete_reminder_unknown_id` — `completeReminder(id: "unknown")` raises GraphQLError, modifies nothing
+12. **REQ-7 (cascade delete) / Breakdown #12:** `test_delete_list_cascades_reminders` — `deleteList(id: "<valid with reminders>")` deletes list and all its reminders; subsequent `reminders(listId: "<deleted>")` returns empty array
+13. **REQ-14 / AC9 / Breakdown #13:** `test_health_unchanged` — `health()` returns exactly `{"status": "ok"}`
+14. **REQ-14 / AC9 / Breakdown #14:** `test_story1_operations_unchanged` — All Story 1 operations (lists, list, addList, renameList, deleteList structure) remain unchanged; cascade delete is transparent extension
+
+### Additional tests for description field (review feedback)
+
+15. **REQ-9 / AC5 (description field) / Review feedback:** `test_add_reminder_with_description` — `addReminder(listId: "<valid>", text: "Pay rent", description: "Monthly rent payment", dueAt: "<future>")` creates reminder with description field populated
+16. **REQ-10 / AC6 (description over limit) / Review feedback:** `test_add_reminder_description_too_long` — `addReminder(listId: "<valid>", text: "Task", description: "<501-char string>", dueAt: "<future>")` raises GraphQLError, adds nothing
+
+**Total test count: 16 tests** (14 from breakdown + 2 for description field per review feedback)
 
 ### Test structure
 
@@ -311,18 +327,19 @@ def test_add_reminder_success():
     list_result = execute_graphql('mutation { addList(name: "Home") { id } }')
     list_id = list_result["data"]["addList"]["id"]
     
-    # Create reminder with future date
+    # Create reminder with future date, no description
     future_date = (datetime.now(timezone.utc) + timedelta(days=1)).isoformat()
     result = execute_graphql(f'''
         mutation {{
             addReminder(listId: "{list_id}", text: "Pay rent", dueAt: "{future_date}") {{
-                id listId text dueAt done
+                id listId text description dueAt done
             }}
         }}
     ''')
     
     reminder = result["data"]["addReminder"]
     assert reminder["text"] == "Pay rent"
+    assert reminder["description"] is None
     assert reminder["dueAt"] == future_date
     assert reminder["listId"] == list_id
     assert reminder["done"] is False
@@ -330,6 +347,44 @@ def test_add_reminder_success():
     # Verify it appears in list.reminders
     list_query = execute_graphql(f'query {{ list(id: "{list_id}") {{ reminders {{ id }} }} }}')
     assert len(list_query["data"]["list"]["reminders"]) == 1
+
+def test_add_reminder_with_description():
+    list_result = execute_graphql('mutation { addList(name: "Home") { id } }')
+    list_id = list_result["data"]["addList"]["id"]
+    
+    future_date = (datetime.now(timezone.utc) + timedelta(days=1)).isoformat()
+    result = execute_graphql(f'''
+        mutation {{
+            addReminder(
+                listId: "{list_id}", 
+                text: "Pay rent", 
+                description: "Monthly rent payment",
+                dueAt: "{future_date}"
+            ) {{
+                id description
+            }}
+        }}
+    ''')
+    
+    reminder = result["data"]["addReminder"]
+    assert reminder["description"] == "Monthly rent payment"
+
+def test_add_reminder_description_too_long():
+    list_result = execute_graphql('mutation { addList(name: "Home") { id } }')
+    list_id = list_result["data"]["addList"]["id"]
+    
+    future_date = (datetime.now(timezone.utc) + timedelta(days=1)).isoformat()
+    long_desc = "x" * 501
+    result = execute_graphql(f'''
+        mutation {{
+            addReminder(listId: "{list_id}", text: "Task", description: "{long_desc}", dueAt: "{future_date}") {{
+                id
+            }}
+        }}
+    ''')
+    
+    assert "errors" in result
+    assert "500" in result["errors"][0]["message"] or "description" in result["errors"][0]["message"].lower()
 
 def test_add_reminder_past_date():
     list_result = execute_graphql('mutation { addList(name: "Home") { id } }')
@@ -394,20 +449,22 @@ def test_delete_list_cascades_reminders():
 ## Edge Cases
 
 1. **Blank text:** Whitespace-only strings (`"   "`) are treated as empty (rejected per product decision 5).
-2. **Past dates:** Any `dueAt` ≤ current UTC time is rejected with "dueAt must be in the future" error.
-3. **Invalid ISO-8601:** Malformed date strings (e.g. `"not-a-date"`, `"2023-13-01"`) raise parsing error.
-4. **Unknown listId:** `addReminder` validates list existence before creating reminder.
-5. **Unknown reminder id:** `completeReminder` validates reminder existence before updating.
-6. **Cascade delete:** Deleting a list removes all its reminders from `_reminders` and `_list_reminders`; no orphaned reminders.
-7. **Sorting edge cases:** Reminders with identical `dueAt` values maintain insertion order (stable sort).
-8. **includeDone default:** `reminders` query defaults to `includeDone: false`; done reminders excluded unless explicitly requested.
-9. **Concurrent requests:** In-memory store is not thread-safe; assume single-threaded execution (typical for development GraphQL servers). Production would require locking or atomic operations.
+2. **Blank description:** Empty or whitespace-only description is normalized to None (valid, optional field).
+3. **Past dates:** Any `dueAt` ≤ current UTC time is rejected with "dueAt must be in the future" error.
+4. **Invalid ISO-8601:** Malformed date strings (e.g. `"not-a-date"`, `"2023-13-01"`) raise parsing error.
+5. **Unknown listId:** `addReminder` validates list existence before creating reminder.
+6. **Unknown reminder id:** `completeReminder` validates reminder existence before updating.
+7. **Cascade delete:** Deleting a list removes all its reminders from `_reminders` and `_list_reminders`; no orphaned reminders.
+8. **Sorting edge cases:** Reminders with identical `dueAt` values maintain insertion order (stable sort).
+9. **includeDone default:** `reminders` query defaults to `includeDone: false`; done reminders excluded unless explicitly requested.
+10. **Description length:** Valid range is 0–500 characters after normalization (blank → None).
+11. **Concurrent requests:** In-memory store is not thread-safe; assume single-threaded execution (typical for development GraphQL servers). Production would require locking or atomic operations.
 
 ---
 
 ## Open Questions
 
-None; all product decisions resolved per requirements.
+None; all product decisions resolved per requirements. Description field added per review feedback.
 
 ---
 
@@ -426,6 +483,7 @@ None; all product decisions resolved per requirements.
 - **ISO-8601 parsing:** Use `datetime.fromisoformat()` (Python 3.7+) or `dateutil.parser.isoparse()` for strict parsing.
 - **Future validation:** Compare `parse_iso8601(dueAt)` to `datetime.now(timezone.utc)`; reject if ≤.
 - **Sorting:** `reminders` query sorts by parsed datetime (oldest first): `sorted(reminders, key=lambda r: parse_iso8601(r["dueAt"]))`.
+- **Description handling:** Optional field; blank/empty values normalized to None during validation; stored as None in reminder dict.
 - **Cascade implementation:** `delete_list` in `src/store.py` updated to iterate `_list_reminders[list_id]` and remove each reminder before deleting the list.
 - **Story 1 compatibility:** All Story 1 operations and tests remain unchanged; `deleteList` behavior transparently extended (no breaking changes).
-- **Error messages:** Validation errors include context (e.g. "Reminder text must be between 1 and 200 characters", "dueAt must be in the future", "List not found").
+- **Error messages:** Validation errors include context (e.g. "Reminder text must be between 1 and 200 characters", "Description must not exceed 500 characters", "dueAt must be in the future", "List not found").

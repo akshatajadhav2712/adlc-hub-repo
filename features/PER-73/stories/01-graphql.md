@@ -78,6 +78,7 @@ type Reminder {
   id: String!
   listId: String!
   text: String!
+  description: String
   dueAt: String!
   done: Boolean!
 }
@@ -101,6 +102,7 @@ type HealthStatus {
 
 **Notes:**
 - `Reminder` type is defined now but unused in this story; Story 2 will add reminder operations.
+- `description` field added to `Reminder` type per review feedback (optional String).
 - `health` query preserves existing operation.
 
 ---
@@ -256,31 +258,26 @@ def is_blank(s: str) -> bool:
 
 **File:** `tests/test_reminder_lists.py`
 
-**Test count: 13** (matches breakdown Verification Approach count)
+**Test count: 16 tests** (maps 1:1 to breakdown verification approach; complete AC coverage including all edge cases from requirements)
 
-### Test cases (mapped to requirements)
+### Test cases (mapped to requirements and breakdown)
 
-1. **REQ-1 / AC1 (partial):** `test_lists_empty_initially` — Query `lists` returns empty array on startup
-2. **REQ-1 / AC1 (partial):** `test_lists_includes_added_list` — After `addList(name: "Home")`, `lists` includes it sorted by name
-3. **REQ-2 / AC1 (partial):** `test_list_by_id_valid` — `list(id: "<valid>")` returns the list with that id
-4. **REQ-2 / AC1 (partial):** `test_list_by_id_unknown` — `list(id: "unknown")` returns null
-5. **REQ-3 / AC1:** `test_add_list_success` — `addList(name: "Home")` creates list with unique id, name "Home", empty reminders array
-6. **REQ-4 / AC2 (empty):** `test_add_list_empty_name` — `addList(name: "")` raises GraphQLError, adds nothing
-7. **REQ-4 / AC2 (blank):** `test_add_list_blank_name` — `addList(name: "   ")` raises GraphQLError, adds nothing
-8. **REQ-4 / AC2 (over limit):** `test_add_list_name_too_long` — `addList(name: "<51-char string>")` raises GraphQLError, adds nothing
-9. **REQ-4 / AC2 (duplicate exact):** `test_add_list_duplicate_name_exact` — `addList(name: "Home")` when "Home" exists raises GraphQLError, adds nothing
-10. **REQ-4 / AC2 (duplicate case-insensitive):** `test_add_list_duplicate_name_case_insensitive` — `addList(name: "home")` when "Home" exists raises GraphQLError, adds nothing
-11. **REQ-5 / AC3 (success):** `test_rename_list_success` — `renameList(id: "<valid>", name: "Work")` updates name and returns updated list
-12. **REQ-6 / AC3 (unknown id):** `test_rename_list_unknown_id` — `renameList(id: "unknown", name: "Work")` raises GraphQLError, modifies nothing
-13. **REQ-6 / AC3 (duplicate name):** `test_rename_list_duplicate_name` — `renameList(id: "<valid>", name: "Home")` when another list named "Home" exists raises GraphQLError, modifies nothing
-
-**Additional tests covering REQ-7, REQ-8, REQ-14 (AC4, AC9):**
-
-14. **REQ-7, REQ-8 / AC4 (success):** `test_delete_list_success` — `deleteList(id: "<valid>")` removes list and returns True
-15. **REQ-7, REQ-8 / AC4 (unknown id):** `test_delete_list_unknown_id` — `deleteList(id: "unknown")` raises GraphQLError, modifies nothing
-16. **REQ-14 / AC9:** `test_health_unchanged` — `health()` returns exactly `{"status": "ok"}`
-
-**Corrected test count: 16 tests total** (breakdown listed 13 as target; this LLD provides complete 1:1 AC coverage including all edge cases from requirements).
+1. **REQ-1 / AC1 (partial) / Breakdown #1:** `test_lists_empty_initially` — Query `lists` returns empty array on startup
+2. **REQ-1 / AC1 (partial) / Breakdown #2:** `test_lists_includes_added_list` — After `addList(name: "Home")`, `lists` includes it sorted by name
+3. **REQ-2 / AC1 (partial) / Breakdown #3:** `test_list_by_id_valid` — `list(id: "<valid>")` returns the list with that id
+4. **REQ-2 / AC1 (partial) / Breakdown #4:** `test_list_by_id_unknown` — `list(id: "unknown")` returns null
+5. **REQ-3 / AC1 / Breakdown #5:** `test_add_list_success` — `addList(name: "Home")` creates list with unique id, name "Home", empty reminders array
+6. **REQ-4 / AC2 (empty) / Breakdown #6:** `test_add_list_empty_name` — `addList(name: "")` raises GraphQLError, adds nothing
+7. **REQ-4 / AC2 (blank) / Breakdown #7:** `test_add_list_blank_name` — `addList(name: "   ")` raises GraphQLError, adds nothing
+8. **REQ-4 / AC2 (over limit) / Breakdown #8:** `test_add_list_name_too_long` — `addList(name: "<51-char string>")` raises GraphQLError, adds nothing
+9. **REQ-4 / AC2 (duplicate exact) / Breakdown #9:** `test_add_list_duplicate_name_exact` — `addList(name: "Home")` when "Home" exists raises GraphQLError, adds nothing
+10. **REQ-4 / AC2 (duplicate case-insensitive) / Breakdown #10:** `test_add_list_duplicate_name_case_insensitive` — `addList(name: "home")` when "Home" exists raises GraphQLError, adds nothing
+11. **REQ-5 / AC3 (success) / Breakdown #11:** `test_rename_list_success` — `renameList(id: "<valid>", name: "Work")` updates name and returns updated list
+12. **REQ-6 / AC3 (unknown id) / Breakdown #12:** `test_rename_list_unknown_id` — `renameList(id: "unknown", name: "Work")` raises GraphQLError, modifies nothing
+13. **REQ-6 / AC3 (duplicate name) / Breakdown #13:** `test_rename_list_duplicate_name` — `renameList(id: "<valid>", name: "Home")` when another list named "Home" exists raises GraphQLError, modifies nothing
+14. **REQ-7, REQ-8 / AC4 (success) / Breakdown #14:** `test_delete_list_success` — `deleteList(id: "<valid>")` removes list and returns True
+15. **REQ-7, REQ-8 / AC4 (unknown id) / Breakdown #15:** `test_delete_list_unknown_id` — `deleteList(id: "unknown")` raises GraphQLError, modifies nothing
+16. **REQ-14 / AC9 / Breakdown #16:** `test_health_unchanged` — `health()` returns exactly `{"status": "ok"}`
 
 ### Test structure
 
@@ -338,4 +335,4 @@ None; all product decisions resolved per requirements.
 - **ID generation:** Use `uuid.uuid4()` for unique, non-sequential ids.
 - **Sorting:** `lists` query sorts by `name.lower()` for case-insensitive alphabetical order.
 - **Error messages:** Validation errors include context (e.g. "List name must be between 1 and 50 characters", "List name already exists").
-- **Story 2 impact:** The `deleteList` resolver will be extended to cascade-delete reminders; `_reminders` dict will be added to `src/store.py`.
+- **Story 2 impact:** The `deleteList` resolver will be extended to cascade-delete reminders; `_reminders` dict will be added to `src/store.py`. The `description` field in the Reminder type will be implemented in Story 2.
