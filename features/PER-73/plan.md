@@ -29,7 +29,7 @@ Added description field (string, optional) to Reminder data model per inline fee
 5. [x] **designer (lld)** — Each story needs concrete implementation details: in-memory data structure choices, GraphQL schema definitions, and validation logic.
    - focus: Add the description field (string, optional) to the Reminder data model in Story 02-graphql and update the schema, store, and tests accordingly.
 6. [x] **test_architect (tests)** — Nine acceptance criteria with edge cases (duplicates, blanks, limits, past dates) need explicit test cases mapped 1:1.
-7. [ ] **architect_gate (review)** _(auto)_ _(rerun)_ — Human approval of specs and this plan before Dev.
+7. [x] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
 8. [ ] **dev** _(auto)_ — Fixed execution step.
 9. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.
 10. [ ] **open_pr** _(auto)_ — Fixed execution step.
