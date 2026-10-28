@@ -1,0 +1,16 @@
+Story 02-graphql is implemented. Reminders can be added, listed, completed, and removed with their list, and all 33 tests passed.
+
+**Behavior**
+- `addReminder` creates an open reminder with text, optional description, and a future `dueAt`, and `list.reminders` includes it.
+- Unknown lists, blank or over-long text, over-long descriptions, and invalid or past dates are rejected.
+- `reminders` returns open reminders sorted by `dueAt`. Done reminders appear only when `includeDone` is true.
+- `completeReminder` marks a reminder done. An unknown id is rejected.
+- `deleteList` also deletes that list's reminders.
+- `health` still returns `{"status": "ok"}`.
+
+**Files changed**
+- `src/schema.py` — `reminders`, `addReminder`, `completeReminder`, and the list `reminders` field resolver
+- `src/resolvers.py` — reminder resolvers
+- `src/store.py` — in-memory reminders and cascade delete
+- `src/validation.py` — text, description, and future-date checks
+- `tests/test_reminders.py` — 16 new tests
