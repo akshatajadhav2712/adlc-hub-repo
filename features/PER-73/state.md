@@ -1,20 +1,20 @@
 ---
 schema_version: 1
 key: PER-73
-status: waiting_architect_review
-current_node: architect_gate
+status: in_development
+current_node: dev
 track: standard
 involved_repos:
 - graphql
 depends_on: []
 owner: aksj
-lease_until: '2026-10-30T10:52:48.759414+00:00'
-revision: 35
+lease_until: '2026-10-30T11:20:50.484593+00:00'
+revision: 51
 hub_sha: null
 ticket_hash: d54ac98949d719cf
 jira_hash: d54ac98949d719cf
 tpm_approved: true
-specs_locked: false
+specs_locked: true
 skills_lock:
   bmad: 1cbcfa272fe65787c06a1fa164a901f46117cca7
 stories:
@@ -28,12 +28,13 @@ dev_retries: 0
 pr_revision_rounds: 0
 gate_rounds:
   plan: 1
+  architect: 1
 pr_ids:
   hub_tpm: '16'
-  hub_arch: '17'
-  hub: '17'
   hub_plan: '18'
-waiting_for: architect_review
+  hub_arch: '19'
+  hub: '19'
+waiting_for: null
 tokens_in: 214935
 tokens_out: 46869
 cost_anthropic_usd: 1.347472
@@ -112,6 +113,36 @@ history:
 - node: architect_gate
   note: awaiting human hub PR approval
   at: '2026-10-28T10:57:37.388129+00:00'
+- node: architect_gate
+  note: approved via hub PR (reconcile)
+  at: '2026-10-28T11:12:36.420502+00:00'
+- node: architect_gate
+  note: "forge unlocked architect_review \u2192 resume"
+  at: '2026-10-28T11:12:36.445673+00:00'
+- node: dev
+  note: starting
+  at: '2026-10-28T11:12:37.814385+00:00'
+- node: architect_gate
+  note: PR 17 merged before the revised specs; review is open again
+  at: '2026-10-28T11:17:18.034108+00:00'
+- node: architect_gate
+  note: revised specs landed after the review PR closed; opened a new PR
+  at: '2026-10-28T11:18:27.671532+00:00'
+- node: catch_up
+  note: manual commit c6cb8a1bcc5509e500d219d061062031f85a01f5
+  at: '2026-10-28T11:19:12.123596+00:00'
+- node: architect_gate
+  note: approved via hub PR (reconcile)
+  at: '2026-10-28T11:20:50.434015+00:00'
+- node: architect_gate
+  note: "forge unlocked architect_review \u2192 resume"
+  at: '2026-10-28T11:20:50.484645+00:00'
+- node: dev
+  note: starting
+  at: '2026-10-28T11:20:51.775622+00:00'
+- node: dev
+  note: done 01-graphql
+  at: '2026-10-28T11:25:25.914467+00:00'
 ---
 
 # Feature state

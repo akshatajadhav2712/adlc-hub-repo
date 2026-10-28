@@ -58,3 +58,9 @@
 2026-10-28T10:57:31.280131+00:00 heartbeat architect_gate
 2026-10-28T10:57:31.280345+00:00 node start architect_gate
 2026-10-28T10:57:37.388329+00:00 node end architect_gate waiting=architect_review
+2026-10-28T11:12:37.813820+00:00 heartbeat dev
+2026-10-28T11:12:37.813962+00:00 node start dev
+2026-10-28T11:12:39.400283+00:00 dev cursor 01-graphql attempt=1
+2026-10-28T11:20:51.774612+00:00 heartbeat dev
+2026-10-28T11:20:51.774892+00:00 node start dev
+2026-10-28T11:20:51.835282+00:00 dev cursor 01-graphql attempt=1
