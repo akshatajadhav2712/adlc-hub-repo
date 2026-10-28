@@ -1,0 +1,24 @@
+$ .venv/bin/python -m compileall -q app
+Can't list 'app'
+
+
+$ .venv/bin/python -m pytest -q
+
+/home/aksj/.adlc/worktrees/trinet-agent-adlc/PER-70/graphql/.venv/bin/python: No module named pytest
+
+
+The in-memory GraphQL todo list is in place beside the existing `health()` function, which is unchanged.
+
+`addTodo`, `todos`, and `completeTodo` use a process-local store. Empty or whitespace-only titles return `Invalid input: title must be a non-empty string` and add nothing. An unknown id returns `Todo not found`. Ids come from `uuid.uuid4().hex`.
+
+**Files added**
+- `requirements.txt` — `strawberry-graphql`
+- `src/todo_store.py` — in-memory store and validation
+- `src/todo_resolvers.py` — resolvers that turn store errors into GraphQL errors
+- `src/todo_schema.py` — Strawberry schema (`Todo`, `todos`, `addTodo`, `completeTodo`)
+- `tests/test_todo_store.py` — store unit tests
+- `tests/test_todo_schema.py` — GraphQL tests for AC1–AC5
+
+**Unchanged:** `src/health.py`, `tests/test_health.py`
+
+**Tests:** `python -m unittest discover -s tests` — 12 tests, all passed, including the health check returning `{"status": "ok"}`.

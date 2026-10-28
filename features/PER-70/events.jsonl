@@ -6,3 +6,9 @@
 {"at": "2026-10-28T07:58:40.029546+00:00", "node": "planner", "event": "llm_ok", "model": "claude-sonnet-4-5-20250929", "in": 2459, "out": 400, "cache_read": 0, "usd": 0.013377, "ms": 9415, "ok": true, "dry_run": false, "error": null}
 {"at": "2026-10-28T08:01:24.853231+00:00", "node": "analyst", "event": "llm_ok", "model": "claude-sonnet-4-5-20250929", "in": 8907, "out": 976, "cache_read": 0, "usd": 0.041361, "ms": 22662, "ok": true, "dry_run": false, "error": null}
 {"at": "2026-10-28T08:01:54.261749+00:00", "node": "analyst", "event": "llm_ok", "model": "claude-sonnet-4-5-20250929", "in": 9859, "out": 2158, "cache_read": 0, "usd": 0.061947, "ms": 29402, "ok": true, "dry_run": false, "error": null}
+{"at": "2026-10-28T08:09:33.512929+00:00", "node": "dev", "event": "cursor_run", "ok": false, "status": "error", "error": "agent exit 1"}
+{"at": "2026-10-28T08:09:33.517476+00:00", "node": "dev", "event": "verify_fail", "ok": false, "error": "lint failed"}
+{"at": "2026-10-28T08:16:30.170530+00:00", "node": "dev", "event": "cursor_run", "ok": true, "status": "ok", "error": null}
+{"at": "2026-10-28T08:16:30.330228+00:00", "node": "dev", "event": "verify_fail", "ok": false, "error": "test failed"}
+{"at": "2026-10-28T08:17:22.247296+00:00", "node": "dev", "event": "cursor_run", "ok": true, "status": "ok", "error": null}
+{"at": "2026-10-28T08:17:22.400687+00:00", "node": "dev", "event": "verify_fail", "ok": false, "error": "test failed"}

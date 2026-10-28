@@ -12,7 +12,7 @@ Single-repo GraphQL feature adding three operations to an existing service; anal
 
 1. [x] **analyst (inline_story)** — Ticket has clear acceptance criteria and is fully scoped to one repo with no ambiguity.
    - focus: Focus on the three GraphQL operations and their exact validation rules; preserve the existing health() endpoint unchanged.
-2. [ ] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
+2. [x] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.
 4. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.
 5. [ ] **open_pr** _(auto)_ — Fixed execution step.
