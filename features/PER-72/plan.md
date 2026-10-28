@@ -12,7 +12,7 @@ Single-repo in-memory feature with explicit acceptance criteria; analyst inline_
 
 1. [x] **analyst (inline_story)** — Ticket fully specifies behavior, AC, and scope for one repo; inline_story writes the implementable story directly.
    - focus: Keep the six acceptance criteria exactly as written; include tech notes on in-memory storage and GraphQL schema.
-2. [ ] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
+2. [x] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.
 4. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.
 5. [ ] **open_pr** _(auto)_ — Fixed execution step.
