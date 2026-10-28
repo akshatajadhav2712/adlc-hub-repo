@@ -1,0 +1,1 @@
+**AC5 violation:** `addReminder` mutation does not accept `description` parameter in resolver signature, but the GraphQL schema (line 46 of `src/schema.py`) and LLD (Story 2, Resolver Signatures section) both declare `description: String` as an optional argument. The resolver must accept `description: str | None = None` to match the schema contract.

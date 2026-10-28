@@ -1,15 +1,15 @@
 ---
 schema_version: 1
 key: PER-73
-status: in_development
-current_node: dev
+status: changes_requested
+current_node: pr_review
 track: standard
 involved_repos:
 - graphql
 depends_on: []
 owner: aksj
 lease_until: '2026-10-30T11:20:50.484593+00:00'
-revision: 62
+revision: 65
 hub_sha: null
 ticket_hash: d54ac98949d719cf
 jira_hash: d54ac98949d719cf
@@ -35,10 +35,10 @@ pr_ids:
   hub_arch: '19'
   hub: '19'
   graphql: '4'
-waiting_for: null
-tokens_in: 295255
-tokens_out: 60102
-cost_anthropic_usd: 1.777971
+waiting_for: spec_revision
+tokens_in: 332424
+tokens_out: 61061
+cost_anthropic_usd: 1.868297
 history:
 - node: intake
   note: snapshot written
@@ -210,6 +210,61 @@ history:
 - node: dev
   note: done 02-graphql (verify-ok; agent status=error)
   at: '2026-10-28T11:57:56.220921+00:00'
+- node: dev
+  note: 'human_mode: code ready, PR deferred'
+  at: '2026-10-28T11:58:00.299418+00:00'
+- node: open_pr
+  note: push graphql ok
+  at: '2026-10-28T11:58:02.975295+00:00'
+- node: pr_review
+  note: still_open graphql:4400141365
+  at: '2026-10-28T11:58:10.435907+00:00'
+- node: pr_review
+  note: still_open graphql:4400141371
+  at: '2026-10-28T11:58:16.608775+00:00'
+- node: pr_review
+  note: still_open graphql:4400141386
+  at: '2026-10-28T11:58:24.028287+00:00'
+- node: pr_review
+  note: still_open graphql:4400141393
+  at: '2026-10-28T11:58:30.055996+00:00'
+- node: pr_review
+  note: post-fix re-review (auto_fix=False)
+  at: '2026-10-28T11:58:30.056040+00:00'
+- node: pr_review
+  note: diff loaded graphql chars=37889
+  at: '2026-10-28T11:58:31.036517+00:00'
+- node: pr_review
+  note: 'inline review graphql: 2 comment(s)'
+  at: '2026-10-28T11:58:42.080156+00:00'
+- node: pr_review
+  note: 'graphql:needs_human:moderate:**AC gap: `validate_future_date` uses `<=` instead
+    of `<`.** Product decision 3 '
+  at: '2026-10-28T11:58:47.727602+00:00'
+- node: pr_review
+  note: re-review triage deferred graphql:needs_human
+  at: '2026-10-28T11:58:47.727636+00:00'
+- node: pr_review
+  note: 'graphql:needs_human:moderate:**Process note: No executable entry point or
+    server setup.** The schema and reso'
+  at: '2026-10-28T11:58:49.756143+00:00'
+- node: pr_review
+  note: re-review triage deferred graphql:needs_human
+  at: '2026-10-28T11:58:49.756185+00:00'
+- node: pr_review
+  note: graphql:issue:major:**AC5 violation:** `addReminder` mutation does not accept
+    `description` paramete
+  at: '2026-10-28T11:58:51.597740+00:00'
+- node: pr_review
+  note: "major issue classified \u2192 human (deferred; continue auto-fix)"
+  at: '2026-10-28T11:58:54.061410+00:00'
+- node: pr_review
+  note: graphql:issue:moderate:**AC5 violation:** `add_reminder` call omits the `description`
+    argument when for
+  at: '2026-10-28T11:58:55.817592+00:00'
+- node: pr_review
+  note: "major issue \u2192 delta spec gate (human)"
+  at: '2026-10-28T11:58:58.347556+00:00'
 ---
 
 # Feature state
