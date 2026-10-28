@@ -14,3 +14,28 @@
 2026-10-28T10:36:23.226166+00:00 heartbeat tpm_gate
 2026-10-28T10:36:23.226558+00:00 node start tpm_gate
 2026-10-28T10:36:35.279885+00:00 node end tpm_gate waiting=tpm_review
+2026-10-28T10:38:43.023011+00:00 heartbeat ticketize
+2026-10-28T10:38:43.023483+00:00 node start ticketize
+2026-10-28T10:38:43.026277+00:00 node end ticketize waiting=None
+2026-10-28T10:38:43.036816+00:00 heartbeat scrum_master
+2026-10-28T10:38:43.037087+00:00 node start scrum_master
+2026-10-28T10:38:43.044704+00:00 heartbeat scrum_master
+2026-10-28T10:39:33.598178+00:00 scrum_master llm model=claude-sonnet-4-5-20250929 in=8066 out=3240 usd=0.072798
+2026-10-28T10:39:38.571253+00:00 node end scrum_master waiting=None
+2026-10-28T10:39:38.580840+00:00 heartbeat designer
+2026-10-28T10:39:38.581042+00:00 node start designer
+2026-10-28T10:39:38.592489+00:00 heartbeat designer
+2026-10-28T10:40:41.988248+00:00 designer llm model=claude-sonnet-4-5-20250929 in=11319 out=3827 usd=0.091362
+2026-10-28T10:40:41.997109+00:00 heartbeat designer
+2026-10-28T10:42:11.644447+00:00 designer llm model=claude-sonnet-4-5-20250929 in=15093 out=5593 usd=0.129174
+2026-10-28T10:42:11.645624+00:00 node end designer waiting=None
+2026-10-28T10:42:11.653690+00:00 heartbeat test_architect
+2026-10-28T10:42:11.653880+00:00 node start test_architect
+2026-10-28T10:42:11.660794+00:00 heartbeat test_architect
+2026-10-28T10:43:15.283532+00:00 test_architect llm model=claude-sonnet-4-5-20250929 in=23064 out=3867 usd=0.127197
+2026-10-28T10:43:15.290965+00:00 heartbeat test_architect
+2026-10-28T10:44:39.669207+00:00 test_architect llm model=claude-sonnet-4-5-20250929 in=24870 out=5584 usd=0.15837
+2026-10-28T10:44:39.670925+00:00 node end test_architect waiting=None
+2026-10-28T10:44:39.676933+00:00 heartbeat architect_gate
+2026-10-28T10:44:39.677128+00:00 node start architect_gate
+2026-10-28T10:44:51.957871+00:00 node end architect_gate waiting=architect_review

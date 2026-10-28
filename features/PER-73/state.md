@@ -1,24 +1,28 @@
 ---
 schema_version: 1
 key: PER-73
-status: waiting_tpm_review
-current_node: tpm_gate
+status: waiting_architect_review
+current_node: architect_gate
 track: standard
 involved_repos:
 - graphql
 depends_on: []
 owner: aksj
-lease_until: '2026-10-30T10:35:30.259740+00:00'
-revision: 13
+lease_until: '2026-10-30T10:38:41.600697+00:00'
+revision: 23
 hub_sha: null
 ticket_hash: d54ac98949d719cf
 jira_hash: d54ac98949d719cf
-tpm_approved: false
+tpm_approved: true
 specs_locked: false
 skills_lock:
   bmad: 1cbcfa272fe65787c06a1fa164a901f46117cca7
-stories: []
-child_ticket_keys: []
+stories:
+- 01-graphql
+- 02-graphql
+child_ticket_keys:
+- PER-74
+- PER-75
 critic_iterations: 0
 dev_retries: 0
 pr_revision_rounds: 0
@@ -26,10 +30,12 @@ gate_rounds: {}
 pr_ids:
   hub_plan: '15'
   hub_tpm: '16'
-waiting_for: tpm_review
-tokens_in: 25173
-tokens_out: 3388
-cost_anthropic_usd: 0.125971
+  hub_arch: '17'
+  hub: '17'
+waiting_for: architect_review
+tokens_in: 107585
+tokens_out: 25499
+cost_anthropic_usd: 0.704872
 history:
 - node: intake
   note: snapshot written
@@ -59,6 +65,27 @@ history:
 - node: tpm_gate
   note: awaiting human hub PR approval (TPM)
   at: '2026-10-28T10:36:35.279396+00:00'
+- node: tpm_gate
+  note: approved via hub PR (reconcile)
+  at: '2026-10-28T10:38:41.580198+00:00'
+- node: tpm_gate
+  note: "forge unlocked tpm_review \u2192 resume"
+  at: '2026-10-28T10:38:41.601119+00:00'
+- node: ticketize
+  note: deferred Linear; proposed_tickets=2
+  at: '2026-10-28T10:38:43.026070+00:00'
+- node: scrum_master
+  note: stories=['01-graphql', '02-graphql']; linear=['PER-74', 'PER-75']
+  at: '2026-10-28T10:39:38.571018+00:00'
+- node: designer
+  note: lld updated
+  at: '2026-10-28T10:42:11.645474+00:00'
+- node: test_architect
+  note: tests appended
+  at: '2026-10-28T10:44:39.670707+00:00'
+- node: architect_gate
+  note: awaiting human hub PR approval
+  at: '2026-10-28T10:44:51.957629+00:00'
 ---
 
 # Feature state

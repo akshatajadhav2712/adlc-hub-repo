@@ -21,7 +21,7 @@
       "why": "Five product decisions are explicitly flagged for review before technical work begins.",
       "instructions": "",
       "auto": false,
-      "status": "pending",
+      "status": "done",
       "rerun": false
     },
     {
@@ -30,7 +30,7 @@
       "why": "Normalize proposed tickets after TPM approval.",
       "instructions": "",
       "auto": true,
-      "status": "pending",
+      "status": "done",
       "rerun": false
     },
     {
@@ -39,7 +39,7 @@
       "why": "The work splits into Part 1 (lists) and Part 2 (reminders) with a dependency, requiring ordered breakdown into implementable stories.",
       "instructions": "Create one story for reminder lists (Part 1) and one for reminders (Part 2); ensure Part 2 depends on Part 1; each story covers its mutations, queries, validation, and tests.",
       "auto": false,
-      "status": "pending",
+      "status": "done",
       "rerun": false
     },
     {
@@ -48,7 +48,7 @@
       "why": "Each story needs concrete implementation details: in-memory data structure choices, GraphQL schema definitions, and validation logic.",
       "instructions": "Specify the in-memory store design (dictionaries vs classes), GraphQL type definitions, resolver signatures, and validation flows for each operation.",
       "auto": false,
-      "status": "pending",
+      "status": "done",
       "rerun": false
     },
     {
@@ -57,7 +57,7 @@
       "why": "Nine acceptance criteria with edge cases (duplicates, blanks, limits, past dates) need explicit test cases mapped 1:1.",
       "instructions": "Map each AC to test cases; cover positive paths, validation rejections, and edge cases like blank strings and boundary limits.",
       "auto": false,
-      "status": "pending",
+      "status": "done",
       "rerun": false
     },
     {
