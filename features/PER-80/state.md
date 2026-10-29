@@ -8,8 +8,8 @@ involved_repos:
 - graphql
 depends_on: []
 owner: aksj
-lease_until: '2026-10-31T07:16:44.565426+00:00'
-revision: 13
+lease_until: '2026-10-31T07:21:37.461828+00:00'
+revision: 23
 hub_sha: null
 ticket_hash: 2014875bfc6e0d3f
 jira_hash: 2014875bfc6e0d3f
@@ -23,15 +23,17 @@ child_ticket_keys: []
 critic_iterations: 0
 dev_retries: 0
 pr_revision_rounds: 0
-gate_rounds: {}
+gate_rounds:
+  plan: 1
+  architect: 1
 pr_ids:
-  hub_plan: '26'
-  hub_arch: '27'
-  hub: '27'
+  hub_plan: '28'
+  hub_arch: '29'
+  hub: '29'
 waiting_for: architect_review
-tokens_in: 21481
-tokens_out: 3239
-cost_anthropic_usd: 0.112712
+tokens_in: 45944
+tokens_out: 8412
+cost_anthropic_usd: 0.263696
 history:
 - node: intake
   note: snapshot written
@@ -61,6 +63,34 @@ history:
 - node: architect_gate
   note: awaiting human hub PR approval
   at: '2026-10-29T07:17:48.425726+00:00'
+- node: catch_up
+  note: "hub comments \u2192 planner revision"
+  at: '2026-10-29T07:19:28.005530+00:00'
+- node: planner
+  note: 'plan v2 from architect_review: added=[''architect''] removed=[] rerun=[]
+    kept=[''analyst''] unresolved=0'
+  at: '2026-10-29T07:19:47.199411+00:00'
+- node: plan_review
+  note: awaiting human hub PR approval (plan)
+  at: '2026-10-29T07:19:58.062221+00:00'
+- node: plan_review
+  note: approved via hub PR (reconcile)
+  at: '2026-10-29T07:21:37.440059+00:00'
+- node: plan_review
+  note: "forge unlocked plan_review \u2192 resume"
+  at: '2026-10-29T07:21:37.461858+00:00'
+- node: architect
+  note: wrote hld.md
+  at: '2026-10-29T07:22:32.078594+00:00'
+- node: architect
+  note: specs=['01']
+  at: '2026-10-29T07:23:01.862355+00:00'
+- node: merge_pack
+  note: merged 1 ticket(s)
+  at: '2026-10-29T07:23:01.870820+00:00'
+- node: architect_gate
+  note: awaiting human hub PR approval
+  at: '2026-10-29T07:23:12.128685+00:00'
 ---
 
 # Feature state

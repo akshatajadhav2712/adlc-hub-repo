@@ -3,15 +3,33 @@
   "key": "PER-80",
   "source": "llm",
   "complexity": "simple",
-  "summary": "Self-contained GraphQL feature in one repo with clear acceptance criteria; analyst inline_story produces the single implementable story directly.",
+  "summary": "Single-repo behavioral change with a data type refinement; architect added to define the enum schema contract before implementation.",
   "track_hint": "quick",
   "steps": [
     {
       "node": "analyst",
       "activity": "inline_story",
       "why": "Single repo, well-defined behavior with complete AC in the ticket.",
-      "instructions": "Keep the story focused on the graphql repo only; emphasize the in-memory constraint and that health() must remain unchanged.",
+      "instructions": "",
       "auto": false,
+      "status": "done",
+      "rerun": false
+    },
+    {
+      "node": "architect",
+      "activity": "hld",
+      "why": "GraphQL schema contract needs explicit enum definition for the done field.",
+      "instructions": "Define the done field as an enum type with values ['done', 'not done'] in the GraphQL schema; update the story's tech notes and acceptance criteria to reflect the enum instead of boolean.",
+      "auto": false,
+      "status": "done",
+      "rerun": false
+    },
+    {
+      "node": "merge_pack",
+      "activity": "pack",
+      "why": "Pack per-ticket specs into merged_plan.md for review.",
+      "instructions": "",
+      "auto": true,
       "status": "done",
       "rerun": false
     },
@@ -22,7 +40,7 @@
       "instructions": "",
       "auto": true,
       "status": "pending",
-      "rerun": false
+      "rerun": true
     },
     {
       "node": "dev",
@@ -76,16 +94,12 @@
       "why": "Scope is unambiguous and technical, no product sign-off needed."
     },
     {
-      "node": "architect",
-      "why": "No new components, API contracts, or cross-repo work; straightforward GraphQL schema addition."
-    },
-    {
       "node": "scrum_master",
       "why": "Single story in one repo, no breakdown required."
     },
     {
       "node": "designer",
-      "why": "Implementation is straightforward from the AC; no complex file plan needed."
+      "why": "Implementation is straightforward from the AC and schema; no complex file plan needed."
     },
     {
       "node": "test_architect",
@@ -93,21 +107,47 @@
     },
     {
       "node": "critic",
-      "why": "Only one spec document produced, nothing to cross-check."
+      "why": "Only requirements and HLD to cross-check; bounded enough without critic."
     }
   ],
   "suggested_roles": [],
   "notes": [],
-  "created_at": "2026-10-29T07:14:23.440388+00:00",
-  "version": 1,
-  "trigger": "ticket",
-  "gate": null,
-  "feedback": [],
+  "created_at": "2026-10-29T07:19:46.442523+00:00",
+  "version": 2,
+  "trigger": "review",
+  "gate": "architect_review",
+  "feedback": [
+    {
+      "id": "hub#27:inline-4409652628",
+      "source": "pr_inline",
+      "body": "data type of done field should be enum with values [done, not done]",
+      "author": "akshatajadhav2712",
+      "path": "features/PER-80/requirements.md",
+      "line": 67,
+      "pr": "hub#27"
+    }
+  ],
   "feedback_errors": [],
-  "seen_feedback_ids": [],
-  "change_summary": "",
-  "changes": null,
-  "addressed": [],
+  "seen_feedback_ids": [
+    "hub#27:inline-4409652628"
+  ],
+  "change_summary": "Added architect to define the done field as an enum with values ['done', 'not done'] per reviewer feedback; requirements and story will be regenerated to align with the enum schema.",
+  "changes": {
+    "added": [
+      "architect"
+    ],
+    "removed": [],
+    "rerun": [],
+    "kept": [
+      "analyst"
+    ]
+  },
+  "addressed": [
+    {
+      "feedback_id": "hub#27:inline-4409652628",
+      "change": "architect added to define done as enum type in GraphQL schema"
+    }
+  ],
   "unresolved_questions": [],
   "requires_review": true
 }
