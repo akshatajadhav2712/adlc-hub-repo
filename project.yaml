@@ -40,8 +40,8 @@ repos:
     role: agents
     base: main
     commands:
-      test: ".venv/bin/python -m pytest -q"
-      lint: ".venv/bin/python -m compileall -q src"
+       test: "uv run --no-project --with pytest $([ -f requirements.txt ] && echo --with-requirements requirements.txt) python -m pytest -q"
+      lint: "uvx ruff check ."
   mcp:
     path_key: mcp
     url: https://github.com/goofranshaikh-eng/adlc-mcp-server.git
