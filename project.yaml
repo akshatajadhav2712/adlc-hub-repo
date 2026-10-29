@@ -32,15 +32,15 @@ repos:
     base: main
     commands:
       # Use worktree .venv (system python has no project deps). Package lives in src/.
-      test: ".venv/bin/python -m unittest discover -s tests"
-      lint: ".venv/bin/python -m compileall -q src"
+      test: "uv run --no-project --with pytest $([ -f requirements.txt ] && echo --with-requirements requirements.txt) python -m pytest -q"
+      lint: "uvx ruff check ."
   agent:
     path_key: agent
     url: https://github.com/goofranshaikh-eng/adlc-agents.git                  
     role: agents
     base: main
     commands:
-       test: "uv run --no-project --with pytest $([ -f requirements.txt ] && echo --with-requirements requirements.txt) python -m pytest -q"
+      test: "uv run --no-project --with pytest $([ -f requirements.txt ] && echo --with-requirements requirements.txt) python -m pytest -q"
       lint: "uvx ruff check ."
   mcp:
     path_key: mcp
