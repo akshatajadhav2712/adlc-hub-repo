@@ -10,7 +10,7 @@ Self-contained GraphQL feature in one repo with clear acceptance criteria; analy
 
 ## Steps
 
-1. [ ] **analyst (inline_story)** — Single repo, well-defined behavior with complete AC in the ticket.
+1. [x] **analyst (inline_story)** — Single repo, well-defined behavior with complete AC in the ticket.
    - focus: Keep the story focused on the graphql repo only; emphasize the in-memory constraint and that health() must remain unchanged.
 2. [ ] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.
