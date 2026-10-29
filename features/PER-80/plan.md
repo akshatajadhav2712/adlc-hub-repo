@@ -23,9 +23,9 @@ Added architect to define the done field as an enum with values ['done', 'not do
 ## Steps
 
 1. [x] **analyst (inline_story)** — Single repo, well-defined behavior with complete AC in the ticket.
-2. [ ] **architect (hld)** — GraphQL schema contract needs explicit enum definition for the done field.
+2. [x] **architect (hld)** — GraphQL schema contract needs explicit enum definition for the done field.
    - focus: Define the done field as an enum type with values ['done', 'not done'] in the GraphQL schema; update the story's tech notes and acceptance criteria to reflect the enum instead of boolean.
-3. [ ] **merge_pack (pack)** _(auto)_ — Pack per-ticket specs into merged_plan.md for review.
+3. [x] **merge_pack (pack)** _(auto)_ — Pack per-ticket specs into merged_plan.md for review.
 4. [ ] **architect_gate (review)** _(auto)_ _(rerun)_ — Human approval of specs and this plan before Dev.
 5. [ ] **dev** _(auto)_ — Fixed execution step.
 6. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.
