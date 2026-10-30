@@ -10,7 +10,7 @@ Single-repo input validation with explicit file and function signatures; analyst
 
 ## Steps
 
-1. [ ] **analyst (inline_story)** — Ticket provides complete implementation detail with file names, function signatures, and mapped acceptance criteria.
+1. [x] **analyst (inline_story)** — Ticket provides complete implementation detail with file names, function signatures, and mapped acceptance criteria.
    - focus: Document the error message format requirement in tech notes as specified in the ticket.
 2. [ ] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.
