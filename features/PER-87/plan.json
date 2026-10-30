@@ -3,14 +3,14 @@
   "key": "PER-87",
   "source": "llm",
   "complexity": "simple",
-  "summary": "Single-repo input validation with explicit file and function signatures; analyst inline_story produces one implementable story with the test coverage requirement.",
+  "summary": "Single-repo validation logic with inline story approach; rerunning analyst to add 'failed' as fourth validator status per reviewer feedback.",
   "track_hint": "standard",
   "steps": [
     {
       "node": "analyst",
       "activity": "inline_story",
-      "why": "Ticket provides complete implementation detail with file names, function signatures, and mapped acceptance criteria.",
-      "instructions": "Document the error message format requirement in tech notes as specified in the ticket.",
+      "why": "Ticket provides complete implementation detail; rerun to add 'failed' status to allowed set.",
+      "instructions": "Add 'failed' as a fourth allowed status value alongside 'ok', 'degraded', and 'down'. Update validation logic, acceptance criteria, and test requirements to cover the new status.",
       "auto": false,
       "status": "done",
       "rerun": false
@@ -22,7 +22,7 @@
       "instructions": "",
       "auto": true,
       "status": "pending",
-      "rerun": false
+      "rerun": true
     },
     {
       "node": "dev",
@@ -89,7 +89,7 @@
     },
     {
       "node": "test_architect",
-      "why": "Ticket maps test requirements 1:1 to acceptance criteria in AC6; analyst will capture this."
+      "why": "Ticket maps test requirements 1:1 to acceptance criteria; analyst captures this in inline story."
     },
     {
       "node": "critic",
@@ -98,16 +98,40 @@
   ],
   "suggested_roles": [],
   "notes": [],
-  "created_at": "2026-10-30T09:34:34.989053+00:00",
-  "version": 1,
-  "trigger": "ticket",
-  "gate": null,
-  "feedback": [],
+  "created_at": "2026-10-30T09:40:57.744209+00:00",
+  "version": 2,
+  "trigger": "review",
+  "gate": "architect_review",
+  "feedback": [
+    {
+      "id": "hub#37:inline-4422297452",
+      "source": "pr_inline",
+      "body": "add one more validator status as failed",
+      "author": "akshatajadhav2712",
+      "path": "features/PER-87/stories/01-graphql.md",
+      "line": 26,
+      "pr": "hub#37"
+    }
+  ],
   "feedback_errors": [],
-  "seen_feedback_ids": [],
-  "change_summary": "",
-  "changes": null,
-  "addressed": [],
+  "seen_feedback_ids": [
+    "hub#37:inline-4422297452"
+  ],
+  "change_summary": "Added 'failed' as fourth allowed validator status per inline review comment; analyst reruns to update requirements, story, and test coverage.",
+  "changes": {
+    "added": [],
+    "removed": [],
+    "rerun": [
+      "analyst"
+    ],
+    "kept": []
+  },
+  "addressed": [
+    {
+      "feedback_id": "hub#37:inline-4422297452",
+      "change": "Analyst reruns inline_story activity to add 'failed' to the allowed status set in src/status.py, update acceptance criteria to validate it, and ensure test coverage includes the new status."
+    }
+  ],
   "unresolved_questions": [],
   "requires_review": true
 }
