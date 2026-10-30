@@ -10,7 +10,7 @@ Self-contained utility function with explicit acceptance criteria and file locat
 
 ## Steps
 
-1. [ ] **analyst (inline_story)** — Ticket has clear requirements, file paths, and test coverage expectations.
+1. [x] **analyst (inline_story)** — Ticket has clear requirements, file paths, and test coverage expectations.
    - focus: AC and tech notes must reflect the VERSION file location, the fallback logic, and the test isolation requirement (temp dir).
 2. [ ] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.
