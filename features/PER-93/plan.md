@@ -10,7 +10,7 @@ Single-file utility function with clear requirements and acceptance criteria; on
 
 ## Steps
 
-1. [ ] **analyst (inline_story)** — Ticket has complete behavioral requirements and acceptance criteria; one story in one repo is sufficient.
+1. [x] **analyst (inline_story)** — Ticket has complete behavioral requirements and acceptance criteria; one story in one repo is sufficient.
    - focus: Preserve all five acceptance criteria exactly as written; emphasize the test coverage requirement in AC4.
 2. [ ] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.

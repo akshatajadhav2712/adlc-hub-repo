@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "key": "PER-93",
+  "source": "llm",
+  "complexity": "trivial",
+  "summary": "Single-file utility function with clear requirements and acceptance criteria; only analyst inline_story is needed to produce an implementable story.",
+  "track_hint": "quick",
+  "steps": [
+    {
+      "node": "analyst",
+      "activity": "inline_story",
+      "why": "Ticket has complete behavioral requirements and acceptance criteria; one story in one repo is sufficient.",
+      "instructions": "Preserve all five acceptance criteria exactly as written; emphasize the test coverage requirement in AC4.",
+      "auto": false,
+      "status": "done",
+      "rerun": false
+    },
+    {
+      "node": "architect_gate",
+      "activity": "review",
+      "why": "Human approval of specs and this plan before Dev.",
+      "instructions": "",
+      "auto": true,
+      "status": "pending",
+      "rerun": false
+    },
+    {
+      "node": "dev",
+      "activity": null,
+      "why": "Fixed execution step.",
+      "instructions": "",
+      "auto": true,
+      "status": "pending",
+      "rerun": false
+    },
+    {
+      "node": "pre_pr_qa",
+      "activity": null,
+      "why": "Fixed execution step.",
+      "instructions": "",
+      "auto": true,
+      "status": "pending",
+      "rerun": false
+    },
+    {
+      "node": "open_pr",
+      "activity": null,
+      "why": "Fixed execution step.",
+      "instructions": "",
+      "auto": true,
+      "status": "pending",
+      "rerun": false
+    },
+    {
+      "node": "pr_review",
+      "activity": null,
+      "why": "Fixed execution step.",
+      "instructions": "",
+      "auto": true,
+      "status": "pending",
+      "rerun": false
+    },
+    {
+      "node": "merge",
+      "activity": null,
+      "why": "Fixed execution step.",
+      "instructions": "",
+      "auto": true,
+      "status": "pending",
+      "rerun": false
+    }
+  ],
+  "skipped": [
+    {
+      "node": "tpm_gate",
+      "why": "Scope is technical and unambiguous with no product decisions needed."
+    },
+    {
+      "node": "architect",
+      "why": "No API contracts, schema changes, cross-repo dependencies or architectural decisions required."
+    },
+    {
+      "node": "scrum_master",
+      "why": "Single self-contained change in one repo does not require breakdown into multiple stories."
+    },
+    {
+      "node": "designer",
+      "why": "Implementation is straightforward file I/O with clear logic; no file plan needed."
+    },
+    {
+      "node": "test_architect",
+      "why": "Test cases are already specified in AC4; no additional test design required."
+    },
+    {
+      "node": "critic",
+      "why": "Single document output means no cross-artifact consistency to verify."
+    }
+  ],
+  "suggested_roles": [],
+  "notes": [],
+  "created_at": "2026-10-30T11:58:54.852002+00:00",
+  "version": 1,
+  "trigger": "ticket",
+  "gate": null,
+  "feedback": [],
+  "feedback_errors": [],
+  "seen_feedback_ids": [],
+  "change_summary": "",
+  "changes": null,
+  "addressed": [],
+  "unresolved_questions": [],
+  "requires_review": true
+}
