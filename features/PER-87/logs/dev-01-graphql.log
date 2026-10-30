@@ -1,0 +1,14 @@
+Health checks now accept only the four allowed statuses and reject anything else.
+
+`validate_status()` in `src/status.py` allows `ok`, `degraded`, `down`, and `failed`. It strips whitespace and lowercases the value before checking it. Invalid input raises `ValueError` with the message `invalid status: <original value>`.
+
+`health()` in `src/health.py` still defaults to `ok`, and it now passes every status through that validator.
+
+**Files changed**
+
+- `src/status.py` — new validator
+- `src/health.py` — health check uses the validator
+- `tests/test_status.py` — AC1–AC3
+- `tests/test_health.py` — AC4–AC5, plus the existing default-`ok` check
+
+`pytest tests/ -v` — 7 passed.
