@@ -23,9 +23,9 @@ Added architect role to incorporate optional Description field into the todo dat
 ## Steps
 
 1. [x] **analyst (inline_story)** — Ticket provides complete spec for a self-contained feature in one repo.
-2. [ ] **architect (hld)** — Regenerate specs with the new Description field.
+2. [x] **architect (hld)** — Regenerate specs with the new Description field.
    - focus: Add an optional Description field (string) to the todo data model in specs and HLD.
-3. [ ] **merge_pack (pack)** _(auto)_ — Pack per-ticket specs into merged_plan.md for review.
+3. [x] **merge_pack (pack)** _(auto)_ — Pack per-ticket specs into merged_plan.md for review.
 4. [ ] **architect_gate (review)** _(auto)_ _(rerun)_ — Human approval of specs and this plan before Dev.
 5. [ ] **dev** _(auto)_ — Fixed execution step.
 6. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.
