@@ -1,18 +1,29 @@
-# Plan — PER-87 (v1)
+# Plan — PER-87 (v2)
 
-- made from: ticket
+- made from: review feedback (architect_review)
 - source: LLM planner
 - complexity: simple
 - needs plan review: yes
 - track hint: standard
 
-Single-repo input validation with explicit file and function signatures; analyst inline_story produces one implementable story with the test coverage requirement.
+Single-repo validation logic with inline story approach; rerunning analyst to add 'failed' as fourth validator status per reviewer feedback.
+
+## What changed
+
+Added 'failed' as fourth allowed validator status per inline review comment; analyst reruns to update requirements, story, and test coverage.
+
+- Rerun: analyst
+
+## Feedback that informed this version
+
+- **PR inline comment** by akshatajadhav2712 on hub#37 `features/PER-87/stories/01-graphql.md:26` `[hub#37:inline-4422297452]`: add one more validator status as failed
+  - addressed by: Analyst reruns inline_story activity to add 'failed' to the allowed status set in src/status.py, update acceptance criteria to validate it, and ensure test coverage includes the new status.
 
 ## Steps
 
-1. [x] **analyst (inline_story)** — Ticket provides complete implementation detail with file names, function signatures, and mapped acceptance criteria.
-   - focus: Document the error message format requirement in tech notes as specified in the ticket.
-2. [ ] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
+1. [ ] **analyst (inline_story)** _(rerun)_ — Ticket provides complete implementation detail; rerun to add 'failed' status to allowed set.
+   - focus: Add 'failed' as a fourth allowed status value alongside 'ok', 'degraded', and 'down'. Update validation logic, acceptance criteria, and test requirements to cover the new status.
+2. [ ] **architect_gate (review)** _(auto)_ _(rerun)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.
 4. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.
 5. [ ] **open_pr** _(auto)_ — Fixed execution step.
@@ -25,5 +36,5 @@ Single-repo input validation with explicit file and function signatures; analyst
 - **architect** — No new components, API contracts, or cross-repo concerns; validation logic is self-contained.
 - **scrum_master** — Single story in one repo with no breakdown needed.
 - **designer** — Ticket provides explicit file plan and function signatures; no design work needed.
-- **test_architect** — Ticket maps test requirements 1:1 to acceptance criteria in AC6; analyst will capture this.
+- **test_architect** — Ticket maps test requirements 1:1 to acceptance criteria; analyst captures this in inline story.
 - **critic** — Single specification document; no cross-artifact consistency to check.
