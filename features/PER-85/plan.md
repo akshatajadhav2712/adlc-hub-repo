@@ -10,7 +10,7 @@ Single-repo GraphQL feature adding an in-memory todo list with clear acceptance 
 
 ## Steps
 
-1. [ ] **analyst (inline_story)** — Ticket provides complete spec for a self-contained feature in one repo.
+1. [x] **analyst (inline_story)** — Ticket provides complete spec for a self-contained feature in one repo.
    - focus: Keep the story focused on the graphql repo only; preserve all six acceptance criteria exactly as stated.
 2. [ ] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.
