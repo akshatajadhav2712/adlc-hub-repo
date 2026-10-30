@@ -25,7 +25,7 @@ Added 'stable': 'yes' field to version() return value per reviewer feedback.
 
 1. [x] **analyst (inline_story)** — Update requirements and story to include the 'stable' field in the version() return value.
    - focus: Add 'stable': 'yes' to the return dictionary in all acceptance criteria and tech notes. Update AC1 to show the full return value including the stable field.
-2. [ ] **architect_gate (review)** _(auto)_ _(rerun)_ — Human approval of specs and this plan before Dev.
+2. [x] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.
 4. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.
 5. [ ] **open_pr** _(auto)_ — Fixed execution step.

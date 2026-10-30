@@ -1,27 +1,27 @@
 ---
 schema_version: 1
 key: PER-86
-status: waiting_architect_review
-current_node: architect_gate
+status: escalated
+current_node: dev
 track: quick
 involved_repos:
 - graphql
 depends_on: []
 owner: aksj
-lease_until: '2026-11-01T08:19:19.150160+00:00'
-revision: 23
+lease_until: '2026-11-01T08:22:08.177722+00:00'
+revision: 34
 hub_sha: null
 ticket_hash: 83cc0bdb6700d89e
 jira_hash: 83cc0bdb6700d89e
-tpm_approved: false
-specs_locked: false
+tpm_approved: true
+specs_locked: true
 skills_lock:
   bmad: 1cbcfa272fe65787c06a1fa164a901f46117cca7
 stories:
 - 01-graphql
 child_ticket_keys: []
 critic_iterations: 0
-dev_retries: 0
+dev_retries: 3
 pr_revision_rounds: 0
 gate_rounds:
   plan: 1
@@ -29,7 +29,7 @@ pr_ids:
   hub_arch: '34'
   hub: '34'
   hub_plan: '35'
-waiting_for: architect_review
+waiting_for: dev_failure
 tokens_in: 50419
 tokens_out: 7159
 cost_anthropic_usd: 0.258302
@@ -87,6 +87,19 @@ history:
 - node: architect_gate
   note: awaiting human hub PR approval
   at: '2026-10-30T08:20:07.333522+00:00'
+- node: architect_gate
+  note: approved via hub PR (reconcile)
+  at: '2026-10-30T08:22:08.152239+00:00'
+- node: architect_gate
+  note: "forge unlocked architect_review \u2192 resume"
+  at: '2026-10-30T08:22:08.177767+00:00'
+- node: dev
+  note: starting
+  at: '2026-10-30T08:22:09.911949+00:00'
+- node: dev
+  note: 'failed 01-graphql: agent made no code changes (agent status=error: agent
+    exit 1)'
+  at: '2026-10-30T08:35:11.380229+00:00'
 ---
 
 # Feature state
