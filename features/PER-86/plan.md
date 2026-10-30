@@ -1,18 +1,31 @@
-# Plan — PER-86 (v1)
+# Plan — PER-86 (v2)
 
-- made from: ticket
+- made from: review feedback (architect_review)
 - source: LLM planner
 - complexity: trivial
 - needs plan review: yes
 - track hint: quick
 
-Self-contained utility function with explicit acceptance criteria and file locations; analyst inline_story alone suffices.
+Simple utility function in one repo; requirements updated to include 'stable' field in return value.
+
+## What changed
+
+Added 'stable': 'yes' field to version() return value per reviewer feedback.
+
+- Rerun: analyst
+
+## Feedback that informed this version
+
+- **PR inline comment** by akshatajadhav2712 on hub#34 `features/PER-86/requirements.md:22` `[hub#34:inline-4421668756]`: {"service": "adlc-graphql", "version": "0.1.0"} along with this it will also return {"service": "adlc-graphql", "version": "0.1.0", stable: "yes"}
+  - addressed by: analyst rerun to update requirements and story with stable field
+- **PR inline comment** by akshatajadhav2712 on hub#34 `features/PER-86/requirements.md:22` `[hub#34:inline-4421669565]`: {"service": "adlc-graphql", "version": "0.1.0"} along with this it will also return {"service": "adlc-graphql", "version": "0.1.0", stable: "yes"}
+  - addressed by: analyst rerun to update requirements and story with stable field
 
 ## Steps
 
-1. [x] **analyst (inline_story)** — Ticket has clear requirements, file paths, and test coverage expectations.
-   - focus: AC and tech notes must reflect the VERSION file location, the fallback logic, and the test isolation requirement (temp dir).
-2. [ ] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
+1. [ ] **analyst (inline_story)** _(rerun)_ — Update requirements and story to include the 'stable' field in the version() return value.
+   - focus: Add 'stable': 'yes' to the return dictionary in all acceptance criteria and tech notes. Update AC1 to show the full return value including the stable field.
+2. [ ] **architect_gate (review)** _(auto)_ _(rerun)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.
 4. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.
 5. [ ] **open_pr** _(auto)_ — Fixed execution step.
