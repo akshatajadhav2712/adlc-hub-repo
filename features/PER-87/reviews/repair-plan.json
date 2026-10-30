@@ -1,0 +1,17 @@
+{
+  "comment_ids": [
+    "4422387881"
+  ],
+  "tier": "minor",
+  "stories": [
+    "01-graphql"
+  ],
+  "items": [
+    {
+      "comment_id": "4422387881",
+      "repo": "graphql",
+      "path": "tests/test_health.py",
+      "tier": "minor"
+    }
+  ]
+}

@@ -12,3 +12,10 @@ Health checks now accept only the four allowed statuses and reject anything else
 - `tests/test_health.py` — AC4–AC5, plus the existing default-`ok` check
 
 `pytest tests/ -v` — 7 passed.
+The duplicate health test is gone, and the suite still covers the story.
+
+`test_health_returns_ok_status()` checked the same thing as `test_health_default()`: that `health()` returns `{"status": "ok"}`. The review asked to keep the existing test as the backward-compatibility check (AC6), so the extra function was removed.
+
+**File changed:** `tests/test_health.py`
+
+**Tests:** `pytest tests/ -v` — 6 passed, including `test_health_default`, the AC4/AC5 health tests, and the AC1–AC3 status tests.
