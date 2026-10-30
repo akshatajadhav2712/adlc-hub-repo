@@ -14,3 +14,12 @@
 2026-10-30T12:00:33.385075+00:00 heartbeat architect_gate
 2026-10-30T12:00:33.385214+00:00 node start architect_gate
 2026-10-30T12:00:42.420549+00:00 node end architect_gate waiting=architect_review
+2026-10-30T12:02:31.118812+00:00 heartbeat dev
+2026-10-30T12:02:31.119008+00:00 node start dev
+2026-10-30T12:02:32.266670+00:00 dev cursor 01-graphql attempt=1
+2026-10-30T12:06:52.086001+00:00 dev verify 01-graphql PASS attempt=1
+2026-10-30T12:06:52.104912+00:00 dev cursor 01-graphql attempt=2
+2026-10-30T12:11:12.221433+00:00 dev verify 01-graphql PASS attempt=2
+2026-10-30T12:11:12.246213+00:00 dev cursor 01-graphql attempt=3
+2026-10-30T12:15:30.675395+00:00 dev verify 01-graphql PASS attempt=3
+2026-10-30T12:15:30.705886+00:00 node end dev waiting=dev_failure
