@@ -3,14 +3,14 @@
   "key": "PER-86",
   "source": "llm",
   "complexity": "trivial",
-  "summary": "Self-contained utility function with explicit acceptance criteria and file locations; analyst inline_story alone suffices.",
+  "summary": "Simple utility function in one repo; requirements updated to include 'stable' field in return value.",
   "track_hint": "quick",
   "steps": [
     {
       "node": "analyst",
       "activity": "inline_story",
-      "why": "Ticket has clear requirements, file paths, and test coverage expectations.",
-      "instructions": "AC and tech notes must reflect the VERSION file location, the fallback logic, and the test isolation requirement (temp dir).",
+      "why": "Update requirements and story to include the 'stable' field in the version() return value.",
+      "instructions": "Add 'stable': 'yes' to the return dictionary in all acceptance criteria and tech notes. Update AC1 to show the full return value including the stable field.",
       "auto": false,
       "status": "done",
       "rerun": false
@@ -22,7 +22,7 @@
       "instructions": "",
       "auto": true,
       "status": "pending",
-      "rerun": false
+      "rerun": true
     },
     {
       "node": "dev",
@@ -98,16 +98,54 @@
   ],
   "suggested_roles": [],
   "notes": [],
-  "created_at": "2026-10-30T08:08:51.171314+00:00",
-  "version": 1,
-  "trigger": "ticket",
-  "gate": null,
-  "feedback": [],
+  "created_at": "2026-10-30T08:15:13.225295+00:00",
+  "version": 2,
+  "trigger": "review",
+  "gate": "architect_review",
+  "feedback": [
+    {
+      "id": "hub#34:inline-4421668756",
+      "source": "pr_inline",
+      "body": "{\"service\": \"adlc-graphql\", \"version\": \"0.1.0\"} along with this it will also return {\"service\": \"adlc-graphql\", \"version\": \"0.1.0\", stable: \"yes\"}",
+      "author": "akshatajadhav2712",
+      "path": "features/PER-86/requirements.md",
+      "line": 22,
+      "pr": "hub#34"
+    },
+    {
+      "id": "hub#34:inline-4421669565",
+      "source": "pr_inline",
+      "body": "{\"service\": \"adlc-graphql\", \"version\": \"0.1.0\"} along with this it will also return {\"service\": \"adlc-graphql\", \"version\": \"0.1.0\", stable: \"yes\"}",
+      "author": "akshatajadhav2712",
+      "path": "features/PER-86/requirements.md",
+      "line": 22,
+      "pr": "hub#34"
+    }
+  ],
   "feedback_errors": [],
-  "seen_feedback_ids": [],
-  "change_summary": "",
-  "changes": null,
-  "addressed": [],
+  "seen_feedback_ids": [
+    "hub#34:inline-4421668756",
+    "hub#34:inline-4421669565"
+  ],
+  "change_summary": "Added 'stable': 'yes' field to version() return value per reviewer feedback.",
+  "changes": {
+    "added": [],
+    "removed": [],
+    "rerun": [
+      "analyst"
+    ],
+    "kept": []
+  },
+  "addressed": [
+    {
+      "feedback_id": "hub#34:inline-4421668756",
+      "change": "analyst rerun to update requirements and story with stable field"
+    },
+    {
+      "feedback_id": "hub#34:inline-4421669565",
+      "change": "analyst rerun to update requirements and story with stable field"
+    }
+  ],
   "unresolved_questions": [],
   "requires_review": true
 }
