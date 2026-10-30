@@ -9,14 +9,14 @@
 
 ## Overview
 
-Add input validation to the health check endpoint so it can report real status values ("ok", "degraded", "down") and reject invalid ones. This ensures monitoring systems can trust the status reported by the service.
+Add input validation to the health check endpoint so it can report real status values ("ok", "degraded", "down", "failed") and reject invalid ones. This ensures monitoring systems can trust the status reported by the service.
 
 ---
 
 ## Acceptance Criteria
 
 ### AC1: Valid statuses are accepted unchanged
-**Given** the status validator is called with "ok", "degraded", or "down"  
+**Given** the status validator is called with "ok", "degraded", "down", or "failed"  
 **When** the value is passed to `validate_status()`  
 **Then** the same value is returned unchanged
 
@@ -35,7 +35,9 @@ Add input validation to the health check endpoint so it can report real status v
 **When** called with no argument  
 **Then** it returns `{"status": "ok"}`  
 **And when** called with status="down"  
-**Then** it returns `{"status": "down"}`
+**Then** it returns `{"status": "down"}`  
+**And when** called with status="failed"  
+**Then** it returns `{"status": "failed"}`
 
 ### AC5: Health function propagates validation errors
 **Given** the health function is called with an invalid status  
@@ -54,7 +56,7 @@ Add input validation to the health check endpoint so it can report real status v
 ## Technical Notes
 
 ### Status Module (`src/status.py`)
-- **Allowed statuses:** `{"ok", "degraded", "down"}`
+- **Allowed statuses:** `{"ok", "degraded", "down", "failed"}`
 - **Function:** `validate_status(value: str) -> str`
   - Returns the value lowercased and stripped if it is in the allowed set
   - Raises `ValueError` with message format: `"invalid status: <value>"` if not allowed
@@ -74,15 +76,15 @@ Add input validation to the health check endpoint so it can report real status v
 ## Implementation Scope
 
 **In scope:**
-- Create `src/status.py` with validation logic
+- Create `src/status.py` with validation logic supporting four status values
 - Update `src/health.py` to use `validate_status()`
-- Write comprehensive tests covering all acceptance criteria
+- Write comprehensive tests covering all acceptance criteria including "failed" status
 - Maintain backward compatibility (no-argument call)
 
 **Out of scope:**
 - Framework or HTTP layer integration (not specified)
 - Logging or monitoring instrumentation
-- Additional status values beyond the three specified
+- Additional status values beyond the four specified
 - Status persistence or state management
 
 ---
@@ -90,10 +92,10 @@ Add input validation to the health check endpoint so it can report real status v
 ## Verification
 
 Each acceptance criterion maps to specific test cases:
-- AC1 → `test_status.py`: test valid statuses pass through
+- AC1 → `test_status.py`: test valid statuses pass through (all four values)
 - AC2 → `test_status.py`: test case/whitespace normalization
 - AC3 → `test_status.py`: test invalid status raises ValueError with correct message
-- AC4 → `test_health.py`: test default and explicit status values
+- AC4 → `test_health.py`: test default and explicit status values (including "failed")
 - AC5 → `test_health.py`: test invalid status propagates error
 - AC6 → Test suite execution confirms all above pass + existing test still passes
 
@@ -108,5 +110,6 @@ None. This is a self-contained addition to the existing codebase.
 ## Notes
 
 - The error message format `"invalid status: <value>"` is documented as part of the contract per the ticket's spec review note
-- The allowed set is fixed at three values; future expansion is not in scope for this story
+- The allowed set includes four values: "ok", "degraded", "down", and "failed"
+- "failed" was added per architect review feedback to provide a distinct status for validation failures
 - Backward compatibility is preserved: existing calls to `health()` continue to work

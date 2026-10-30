@@ -10,10 +10,10 @@
 
 ## Description
 
-Add input validation to the health check endpoint so it can report real status values ("ok", "degraded", "down") and reject invalid ones. This ensures monitoring systems can trust the status reported by the service.
+Add input validation to the health check endpoint so it can report real status values ("ok", "degraded", "down", "failed") and reject invalid ones. This ensures monitoring systems can trust the status reported by the service.
 
 Currently, the health check always returns `{"status": "ok"}`. This story adds a validation layer that:
-- Defines an explicit set of allowed status values
+- Defines an explicit set of allowed status values (four values: "ok", "degraded", "down", "failed")
 - Normalizes input (case-insensitive, whitespace-tolerant)
 - Rejects invalid values with a contract-defined error message
 - Maintains backward compatibility for existing callers
@@ -23,7 +23,7 @@ Currently, the health check always returns `{"status": "ok"}`. This story adds a
 ## Acceptance Criteria
 
 ### AC1: Valid statuses are accepted unchanged
-**Given** the status validator is called with "ok", "degraded", or "down"  
+**Given** the status validator is called with "ok", "degraded", "down", or "failed"  
 **When** the value is passed to `validate_status()`  
 **Then** the same value is returned unchanged
 
@@ -42,7 +42,9 @@ Currently, the health check always returns `{"status": "ok"}`. This story adds a
 **When** called with no argument  
 **Then** it returns `{"status": "ok"}`  
 **And when** called with status="down"  
-**Then** it returns `{"status": "down"}`
+**Then** it returns `{"status": "down"}`  
+**And when** called with status="failed"  
+**Then** it returns `{"status": "failed"}`
 
 ### AC5: Health function propagates validation errors
 **Given** the health function is called with an invalid status  
@@ -68,7 +70,7 @@ Create a new module containing:
 
 ```python
 # Allowed status values
-ALLOWED_STATUSES = {"ok", "degraded", "down"}
+ALLOWED_STATUSES = {"ok", "degraded", "down", "failed"}
 
 def validate_status(value: str) -> str:
     """
@@ -90,7 +92,7 @@ def validate_status(value: str) -> str:
 ```
 
 **Implementation notes:**
-- The allowed set is a module-level constant for easy maintenance
+- The allowed set is a module-level constant containing four values: "ok", "degraded", "down", "failed"
 - Normalization (`.strip().lower()`) happens before validation
 - The error message format `"invalid status: <value>"` is part of the contract and must use the original input value, not the normalized one
 - The function signature is explicit: takes `str`, returns `str`, raises `ValueError`
@@ -145,12 +147,14 @@ def test_valid_statuses_unchanged():
     assert validate_status("ok") == "ok"
     assert validate_status("degraded") == "degraded"
     assert validate_status("down") == "down"
+    assert validate_status("failed") == "failed"
 
 def test_case_insensitive_with_whitespace():
     """AC2: Case-insensitive and whitespace-tolerant"""
     assert validate_status("  OK ") == "ok"
     assert validate_status("DEGRADED") == "degraded"
     assert validate_status("\tDown\n") == "down"
+    assert validate_status("  FAILED  ") == "failed"
 
 def test_invalid_status_raises_value_error():
     """AC3: Invalid statuses raise ValueError with specific message"""
@@ -163,8 +167,8 @@ def test_invalid_status_raises_value_error():
 
 **Test design notes:**
 - Each test maps directly to one acceptance criterion
-- AC1 test covers all three allowed values
-- AC2 test includes variations: leading/trailing spaces, uppercase, mixed whitespace
+- AC1 test covers all four allowed values
+- AC2 test includes variations for all four values: leading/trailing spaces, uppercase, mixed whitespace
 - AC3 test verifies both the exception type and the exact message format
 - Use `pytest.raises` with `match` parameter to validate error message format
 
@@ -189,6 +193,7 @@ def test_health_with_explicit_status():
     """AC4: Health function uses validated status"""
     assert health("down") == {"status": "down"}
     assert health("degraded") == {"status": "degraded"}
+    assert health("failed") == {"status": "failed"}
     assert health("  OK ") == {"status": "ok"}  # Normalization works through health()
 
 def test_health_with_invalid_status():
@@ -199,7 +204,7 @@ def test_health_with_invalid_status():
 
 **Test design notes:**
 - Preserve the existing test to verify backward compatibility (AC6)
-- AC4 test covers both the default case and explicit status values
+- AC4 test covers both the default case and explicit status values, including the new "failed" status
 - AC5 test verifies that validation errors propagate from `validate_status()` through `health()`
 - The AC4 test includes a normalization case to confirm the integration works end-to-end
 
@@ -207,11 +212,11 @@ def test_health_with_invalid_status():
 
 ## Implementation Order
 
-1. Create `src/status.py` with `ALLOWED_STATUSES` and `validate_status()`
-2. Create `tests/test_status.py` with AC1–AC3 test cases
+1. Create `src/status.py` with `ALLOWED_STATUSES` (four values) and `validate_status()`
+2. Create `tests/test_status.py` with AC1–AC3 test cases (including "failed" coverage)
 3. Run status tests to verify validation logic
 4. Update `src/health.py` to import and use `validate_status()`
-5. Update `tests/test_health.py` with AC4–AC5 test cases
+5. Update `tests/test_health.py` with AC4–AC5 test cases (including "failed" coverage)
 6. Run full test suite to verify AC6 (all tests pass including existing test)
 
 ---
@@ -226,10 +231,10 @@ pytest tests/ -v                # Verify AC6 (complete coverage)
 ```
 
 **Expected outcomes:**
-- `test_valid_statuses_unchanged` passes → AC1 verified
-- `test_case_insensitive_with_whitespace` passes → AC2 verified
+- `test_valid_statuses_unchanged` passes (all four values) → AC1 verified
+- `test_case_insensitive_with_whitespace` passes (all four values) → AC2 verified
 - `test_invalid_status_raises_value_error` passes → AC3 verified
-- `test_health_with_explicit_status` passes → AC4 verified
+- `test_health_with_explicit_status` passes (including "failed") → AC4 verified
 - `test_health_with_invalid_status` passes → AC5 verified
 - `test_health_default` (existing) passes → Backward compatibility confirmed
 - All tests pass → AC6 verified
@@ -247,12 +252,13 @@ The error message `"invalid status: <value>"` is part of the contract. This form
 - Future changes to validation logic must maintain this format
 
 **Allowed statuses:**
-The set `{"ok", "degraded", "down"}` is fixed for this story. These values were chosen to represent:
+The set `{"ok", "degraded", "down", "failed"}` is fixed for this story. These values were chosen to represent:
 - `ok`: System operating normally
 - `degraded`: System functional but with reduced capacity or performance
 - `down`: System unavailable or non-functional
+- `failed`: Validation failure or critical error state
 
-Future expansion of the status set is out of scope for this story.
+The addition of "failed" was incorporated per architect review feedback to provide a distinct status for validation failures.
 
 ### Backward Compatibility
 
@@ -273,6 +279,7 @@ All file paths are relative to repository root `/home/aksj/Documents/adlc-graphq
 **Existing files preserved:**
 - `src/__init__.py`
 - `tests/__init__.py`
+- `README.md`
 - All other files in repo tree remain unchanged
 
 ---
@@ -288,7 +295,7 @@ None. This is a self-contained addition to the existing codebase with no externa
 - Framework or HTTP layer integration (not specified in ticket)
 - Logging or monitoring instrumentation
 - Status persistence or state management
-- Additional status values beyond the three specified
+- Additional status values beyond the four specified
 - Status transition logic or state machine behavior
 - API documentation updates (not mentioned in requirements)
 
@@ -300,3 +307,4 @@ None. This is a self-contained addition to the existing codebase with no externa
 - The error message format is documented per the ticket's spec review note
 - Test coverage maps 1:1 to acceptance criteria as required by AC6
 - Backward compatibility is explicitly tested and preserved
+- The "failed" status was added per architect review feedback and is now covered in all validation logic, acceptance criteria, and test requirements
