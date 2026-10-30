@@ -28,8 +28,8 @@ Added architect role to incorporate optional Description field into the todo dat
 3. [x] **merge_pack (pack)** _(auto)_ — Pack per-ticket specs into merged_plan.md for review.
 4. [x] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
 5. [ ] **dev** _(auto)_ — Fixed execution step.
-6. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.
-7. [ ] **open_pr** _(auto)_ — Fixed execution step.
+6. [x] **pre_pr_qa** _(auto)_ — Fixed execution step.
+7. [x] **open_pr** _(auto)_ — Fixed execution step.
 8. [ ] **pr_review** _(auto)_ — Fixed execution step.
 9. [ ] **merge** _(auto)_ — Fixed execution step.
 

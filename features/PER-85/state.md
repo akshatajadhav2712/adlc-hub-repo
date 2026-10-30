@@ -1,15 +1,15 @@
 ---
 schema_version: 1
 key: PER-85
-status: developed
-current_node: dev
+status: pr_reviewed
+current_node: pr_review
 track: quick
 involved_repos:
 - graphql
 depends_on: []
 owner: aksj
 lease_until: '2026-11-01T06:23:53.326675+00:00'
-revision: 32
+revision: 40
 hub_sha: null
 ticket_hash: 2014875bfc6e0d3f
 jira_hash: 2014875bfc6e0d3f
@@ -29,10 +29,11 @@ pr_ids:
   hub_arch: '31'
   hub: '31'
   hub_plan: '32'
-waiting_for: human_pr
-tokens_in: 44229
-tokens_out: 7967
-cost_anthropic_usd: 0.251876
+  graphql: '5'
+waiting_for: feature_pr_human
+tokens_in: 51804
+tokens_out: 8071
+cost_anthropic_usd: 0.276161
 history:
 - node: intake
   note: snapshot written
@@ -105,6 +106,24 @@ history:
 - node: dev
   note: 'human_mode: code ready, PR deferred'
   at: '2026-10-30T06:28:18.142243+00:00'
+- node: dev
+  note: 'human_mode: resume opens PR'
+  at: '2026-10-30T06:58:28.949876+00:00'
+- node: pre_pr_qa
+  note: report written
+  at: '2026-10-30T06:58:28.977254+00:00'
+- node: open_pr
+  note: push graphql ok
+  at: '2026-10-30T06:58:37.736626+00:00'
+- node: open_pr
+  note: PRs opened graphql:5
+  at: '2026-10-30T06:58:37.736672+00:00'
+- node: pr_review
+  note: diff missing graphql
+  at: '2026-10-30T06:58:41.368005+00:00'
+- node: pr_review
+  note: awaiting feature_pr_human
+  at: '2026-10-30T06:58:56.621292+00:00'
 ---
 
 # Feature state
