@@ -10,7 +10,7 @@
 
 ## Description
 
-Introduce a utility function `version()` in a new module `src/version.py` that reports the service name and version. The version is read from a `VERSION` file at the repository root (`/home/aksj/Documents/adlc-graphql/VERSION`). If the file is missing or empty, the function returns a fallback version `"0.0.0"`.
+Introduce a utility function `version()` in a new module `src/version.py` that reports the service name, version, and stability indicator. The version is read from a `VERSION` file at the repository root (`/home/aksj/Documents/adlc-graphql/VERSION`). If the file is missing or empty, the function returns a fallback version `"0.0.0"`. The function always returns `"stable": "yes"` to indicate production readiness.
 
 A `VERSION` file containing `0.1.0` will be created at the repository root as part of this story.
 
@@ -22,7 +22,7 @@ A `VERSION` file containing `0.1.0` will be created at the repository root as pa
 
 **Given** the repository root contains a `VERSION` file with content `0.1.0`  
 **When** `version()` is called  
-**Then** it returns `{"service": "adlc-graphql", "version": "0.1.0"}`
+**Then** it returns `{"service": "adlc-graphql", "version": "0.1.0", "stable": "yes"}`
 
 ---
 
@@ -30,7 +30,7 @@ A `VERSION` file containing `0.1.0` will be created at the repository root as pa
 
 **Given** the `VERSION` file does not exist at the repository root  
 **When** `version()` is called  
-**Then** it returns `{"service": "adlc-graphql", "version": "0.0.0"}`
+**Then** it returns `{"service": "adlc-graphql", "version": "0.0.0", "stable": "yes"}`
 
 ---
 
@@ -38,7 +38,7 @@ A `VERSION` file containing `0.1.0` will be created at the repository root as pa
 
 **Given** the `VERSION` file exists but contains only whitespace or is empty  
 **When** `version()` is called  
-**Then** it returns `{"service": "adlc-graphql", "version": "0.0.0"}`
+**Then** it returns `{"service": "adlc-graphql", "version": "0.0.0", "stable": "yes"}`
 
 ---
 
@@ -70,13 +70,14 @@ from pathlib import Path
 
 def version() -> dict[str, str]:
     """
-    Return the service name and version.
+    Return the service name, version, and stability indicator.
     
     Version is read from VERSION file at repository root.
     If the file is missing, empty, or whitespace-only, return "0.0.0".
+    The "stable" field is always "yes".
     
     Returns:
-        dict with keys "service" and "version"
+        dict with keys "service", "version", and "stable"
     """
     # Resolve repository root: parent of src/ directory
     repo_root = Path(__file__).parent.parent
@@ -91,7 +92,8 @@ def version() -> dict[str, str]:
     
     return {
         "service": "adlc-graphql",
-        "version": version_string
+        "version": version_string,
+        "stable": "yes"
     }
 ```
 
@@ -133,7 +135,7 @@ def test_version_with_file_present():
         
         result = version_module.version()
         
-        assert result == {"service": "adlc-graphql", "version": "0.1.0"}
+        assert result == {"service": "adlc-graphql", "version": "0.1.0", "stable": "yes"}
 
 
 def test_version_with_missing_file():
@@ -154,7 +156,7 @@ def test_version_with_missing_file():
         
         result = version_module.version()
         
-        assert result == {"service": "adlc-graphql", "version": "0.0.0"}
+        assert result == {"service": "adlc-graphql", "version": "0.0.0", "stable": "yes"}
 
 
 def test_version_with_empty_file():
@@ -176,7 +178,7 @@ def test_version_with_empty_file():
         
         result = version_module.version()
         
-        assert result == {"service": "adlc-graphql", "version": "0.0.0"}
+        assert result == {"service": "adlc-graphql", "version": "0.0.0", "stable": "yes"}
 ```
 
 ### File Structure After Implementation
@@ -187,10 +189,16 @@ def test_version_with_empty_file():
 ├── README.md
 ├── src/
 │   ├── __init__.py
+│   ├── __pycache__/
+│   │   ├── __init__.cpython-312.pyc
+│   │   └── health.cpython-312.pyc
 │   ├── health.py                    (unchanged)
 │   └── version.py                   (new)
 └── tests/
     ├── __init__.py
+    ├── __pycache__/
+    │   ├── __init__.cpython-312.pyc
+    │   └── test_health.cpython-312.pyc
     ├── test_health.py               (unchanged)
     └── test_version.py              (new)
 ```
@@ -202,6 +210,7 @@ def test_version_with_empty_file():
 3. If exists, read content and strip whitespace.
 4. If stripped content is non-empty, use it; otherwise use `"0.0.0"`.
 5. If file does not exist, use `"0.0.0"`.
+6. Always set `"stable"` field to `"yes"`.
 
 ### Test Isolation
 
@@ -213,6 +222,7 @@ All tests in `tests/test_version.py` use `tempfile.TemporaryDirectory()` to crea
 
 - Adding HTTP routes or GraphQL schema changes to expose the version endpoint
 - Modifying any existing modules beyond creating the new files listed above
+- Dynamic or configurable stability indicators (the `"stable"` field is hardcoded to `"yes"`)
 
 ---
 
@@ -243,5 +253,6 @@ Existing tests in `tests/test_health.py` must continue to pass without modificat
 ## Notes
 
 - The `VERSION` file path is `/home/aksj/Documents/adlc-graphql/VERSION` (repository root).
+- The `"stable"` field is always set to `"yes"` to indicate production readiness.
 - This story implements only the utility function; integration into HTTP or GraphQL endpoints is deferred to future work.
 - Test isolation is critical: tests must not depend on or modify the real `VERSION` file.
