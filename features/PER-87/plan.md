@@ -23,7 +23,7 @@ Added 'failed' as fourth allowed validator status per inline review comment; ana
 
 1. [x] **analyst (inline_story)** — Ticket provides complete implementation detail; rerun to add 'failed' status to allowed set.
    - focus: Add 'failed' as a fourth allowed status value alongside 'ok', 'degraded', and 'down'. Update validation logic, acceptance criteria, and test requirements to cover the new status.
-2. [ ] **architect_gate (review)** _(auto)_ _(rerun)_ — Human approval of specs and this plan before Dev.
+2. [x] **architect_gate (review)** _(auto)_ — Human approval of specs and this plan before Dev.
 3. [ ] **dev** _(auto)_ — Fixed execution step.
 4. [ ] **pre_pr_qa** _(auto)_ — Fixed execution step.
 5. [ ] **open_pr** _(auto)_ — Fixed execution step.

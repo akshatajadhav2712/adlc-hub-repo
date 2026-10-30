@@ -1,7 +1,7 @@
 ---
 schema_version: 1
 key: PER-87
-status: in_development
+status: developed
 current_node: dev
 track: standard
 involved_repos:
@@ -9,7 +9,7 @@ involved_repos:
 depends_on: []
 owner: aksj
 lease_until: '2026-11-01T09:47:36.158895+00:00'
-revision: 30
+revision: 31
 hub_sha: null
 ticket_hash: e07e8a8c71fa2a13
 jira_hash: e07e8a8c71fa2a13
@@ -29,7 +29,7 @@ pr_ids:
   hub_arch: '37'
   hub: '37'
   hub_plan: '38'
-waiting_for: null
+waiting_for: human_pr
 tokens_in: 51695
 tokens_out: 8430
 cost_anthropic_usd: 0.281203
@@ -99,6 +99,9 @@ history:
 - node: dev
   note: done 01-graphql
   at: '2026-10-30T09:49:02.453502+00:00'
+- node: dev
+  note: 'human_mode: code ready, PR deferred'
+  at: '2026-10-30T09:49:07.811872+00:00'
 ---
 
 # Feature state
